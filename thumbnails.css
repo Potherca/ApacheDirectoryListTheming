@@ -1,0 +1,56 @@
+/* Adapted from: http://www.zurb.com/playground/css3-polaroids/  */
+ul.polaroids {
+	/*margin:0 0 18px -30px;*/
+	/*position:absolute;*/
+	position:relative;
+	right:8em;
+	/*top:15em;*/
+	width:10em;
+    float: right;
+}
+
+ul.polaroids li {
+	display: inline;
+}
+
+ul.polaroids a {
+	background: #fff;
+	display: inline;
+	float: left;
+	margin: 0 0 27px 30px;
+	/*width: auto;*/
+	width: 190px;
+	padding: 10px 10px 15px;
+	text-align: center;
+	font-family: "Marker Felt", sans-serif;
+	text-decoration: none;
+	color: #333;
+	font-size: 0.9em;
+	-webkit-box-shadow: 0 3px 6px rgba(0,0,0,.25);
+	-moz-box-shadow: 0 3px 6px rgba(0,0,0,.25);
+	-webkit-transform: rotate(-2deg);
+	-webkit-transition: -webkit-transform .15s linear;
+	-moz-transform: rotate(-2deg);
+}
+
+ul.polaroids img {
+	border:1px solid #DDD;
+	display: block;
+	/*width: 190px;*/
+	margin-bottom: 12px;
+	margin-left: auto; 
+	margin-right: auto
+}
+
+ul.polaroids a:after {
+	content: attr(title);
+}
+
+ul.polaroids li:nth-child(even) a { -webkit-transform: rotate(2deg);  -moz-transform: rotate(2deg); }
+ul.polaroids li:nth-child(3n) a { -webkit-transform: none; position: relative; top: -5px;  -moz-transform: none; }
+ul.polaroids li:nth-child(5n) a { -webkit-transform: rotate(5deg); position: relative; right: 5px;  -moz-transform: rotate(5deg); }
+ul.polaroids li:nth-child(8n) a { position: relative; right: 5px; top: 8px; }
+ul.polaroids li:nth-child(11n) a { position: relative; left: -5px; top: 3px; }
+
+ul.polaroids li.messy a { margin-top: -375px; margin-left: 160px; -webkit-transform: rotate(-5deg); -moz-transform: rotate(-5deg); }
+ul.polaroids li a:hover { -webkit-transform: scale(1.25); -moz-transform: scale(1.25); -webkit-box-shadow: 0 3px 6px rgba(0,0,0,.5); -moz-box-shadow: 0 3px 6px rgba(0,0,0,.5); position: relative; z-index: 5; }
