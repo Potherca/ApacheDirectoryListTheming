@@ -1,0 +1,3 @@
+AddType text/html .php
+AddHandler application/x-httpd-php .php
+Options -Indexes 
