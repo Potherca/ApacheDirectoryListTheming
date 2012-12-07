@@ -1,5 +1,8 @@
 <!DOCTYPE html>
 <?
+    if(!is_dir($_SERVER['DOCUMENT_ROOT'])){
+        $_SERVER['DOCUMENT_ROOT'] = dirname(dirname($_SERVER['SCRIPT_FILENAME']));
+    }
     $sCurrentWebDir = $_SERVER['REQUEST_URI'];
 	$sCurrentRealDir = urldecode($_SERVER['DOCUMENT_ROOT'].$sCurrentWebDir);
 
@@ -104,8 +107,8 @@
 
 <body>
     <?= $sReadme; ?>
-	
-	<? 
+
+	<?
 		if(!empty($aImages)){
 			$sContent = '<ul class="thumbnails polaroids">';
 			foreach($aImages as $t_sImage => $t_sExtension){ 
@@ -115,13 +118,14 @@
 			echo $sContent;
 		}#if
 	?>
-	
+
     <div class="page main-content">
     <h1>
         <span>Directory index for</span>
         <a href="http://<?= $_SERVER['SERVER_NAME']; ?>"><?= $_SERVER['SERVER_NAME'];?></a><?= $sIndexHtml;?>
     </h1>
 
+    <?if(!empty($aExtensions)):?>
     <form action="" method="get" class="small">
     	Show only files with extension
  		   <select name="P" size="1">
@@ -134,3 +138,4 @@
 	    </select>
     	<button type="submit">Go</button>
     </form>
+    <?endif;?>
