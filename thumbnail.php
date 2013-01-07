@@ -11,6 +11,9 @@
 //@TODO:	Create GD compatible version
 //@TODO:	Use Images for exceptions...
 //@DONE: 	Only resize if image size is larger than 200x200
+if(!is_dir($_SERVER['DOCUMENT_ROOT'])){
+    $_SERVER['DOCUMENT_ROOT'] = dirname(dirname($_SERVER['SCRIPT_FILENAME']));
+}
 
 $sRootDirectory = $_SERVER['DOCUMENT_ROOT'];
 $sCurrentDirectory = dirname(__FILE__) . '/';
