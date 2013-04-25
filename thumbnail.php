@@ -20,7 +20,7 @@ $sCurrentDirectory = dirname(__FILE__) . '/';
 $sThumbDirectory = $sCurrentDirectory . 'thumbs/';
 
 if(isset($_GET['file'])){
-	$sFilePath = $sRootDirectory . $_GET['file'];
+    $sFilePath = $sRootDirectory . $_GET['file'];
 }
 else{
     $sFilePath = $sThumbDirectory . 'empty.png';
@@ -33,68 +33,68 @@ function outputThumbnail($p_sFilePath, $p_sThumbDirectory, $p_iImageWidth, $p_sO
     $bIOnlyKnowHowToWorkImagickByUsingTheCommandline = true;
 
     if(!is_dir($p_sThumbDirectory)){
-    	throw new Exception('The directory to store the Thumbnails in does not excist at "'.$p_sThumbDirectory.'"');
+        throw new Exception('The directory to store the Thumbnails in does not exist at "'.$p_sThumbDirectory.'"');
     }
-	elseif(!is_writable($p_sThumbDirectory)){
-    	throw new Exception('The directory to store the Thumbnails in does not allow writing to it.');
-	}	
-	
-	//@TODO: check if file is on of following: '.gif', '.jpg', '.png', '.svg', '.tiff', '.ps', '.pdf', '.bmp', '.eps', '.psd', 
-	/* for .swf support look at http://www.swftools.org/ ?
-	 * for html preview, it is already possible to do to pdf... http://code.google.com/p/wkhtmltopdf/ 
-	 * although it's a bit of a hack that might work.
-	 */ 
-	
+    elseif(!is_writable($p_sThumbDirectory)){
+        throw new Exception('The directory to store the Thumbnails is not writable "'.$p_sThumbDirectory.'"');
+    }
+
+    //@TODO: check if file is on of following: '.gif', '.jpg', '.png', '.svg', '.tiff', '.ps', '.pdf', '.bmp', '.eps', '.psd',
+    /* for .swf support look at http://www.swftools.org/ ?
+     * for html preview, it is already possible to do to pdf... http://code.google.com/p/wkhtmltopdf/
+     * although it's a bit of a hack that might work.
+     */
+
     $sSaveFileName = md5(basename($p_sFilePath)) . '.'.$p_sOutputType;
     $sSaveFilePath = $p_sThumbDirectory . $sSaveFileName;
 
-	if(class_exists('Imagick')){
-		$bRefresh=false;
-		if($bRefresh === true && is_file($sSaveFilePath)){		
-			unlink($sSaveFilePath);
-		}#if
-		
-	    if(!is_file($sSaveFilePath)){		
-			$aSize = getimagesize($p_sFilePath);
-			// Create thumb for file
-			if($bIOnlyKnowHowToWorkImagickByUsingTheCommandline === true){
-			    // Save Locally
+    if(class_exists('Imagick')){
+        $bRefresh=false;
+        if($bRefresh === true && is_file($sSaveFilePath)){
+            unlink($sSaveFilePath);
+        }#if
+
+        if(!is_file($sSaveFilePath)){
+            $aSize = getimagesize($p_sFilePath);
+            // Create thumb for file
+            if($bIOnlyKnowHowToWorkImagickByUsingTheCommandline === true){
+                // Save Locally
                 $iImageWidth = $p_iImageWidth;
-			    if(isset($aSize[0]) && $aSize[0] <= $p_iImageWidth){
-			        $iImageWidth = $aSize[0];
+                if(isset($aSize[0]) && $aSize[0] <= $p_iImageWidth){
+                    $iImageWidth = $aSize[0];
                 }#if
-                
-			    $sCommand =
-				      'convert \'' . urldecode($p_sFilePath) . '[0]\''
-				    . ' -colorspace RGB'
-    				. ' -geometry ' . $iImageWidth
-				    . ' \'' . $sSaveFilePath . '\''
+
+                $sCommand =
+                    'convert \'' . urldecode($p_sFilePath) . '[0]\''
+                        . ' -colorspace RGB'
+                        . ' -geometry ' . $iImageWidth
+                        . ' \'' . $sSaveFilePath . '\''
                 ;
-			    
-			    $aResult = executeCommand($sCommand);
 
-			    if($aResult['return'] !== 0){
-			    	throw new Exception('Error executing '.$aResult['stderr'] . '(full command : "'. $aResult['stdin'] .'")');
-			    }#if
-			}
-			else{
-			    // This probably still needs some fixing before it'll actually work :-S
-			    $oImagick = new imagick( $p_sFilePath.'[0]');      // Read First Page of PDF
+                $aResult = executeCommand($sCommand);
 
-		        $oImagick->setResolution($p_iImageWidth, 0);  // If 0 is provided as a width or height parameter, aspect ratio is maintained
+                if($aResult['return'] !== 0){
+                    throw new Exception('Error executing '.$aResult['stderr'] . '(full command : "'. $aResult['stdin'] .'")');
+                }#if
+            }
+            else{
+                // This probably still needs some fixing before it'll actually work :-S
+                $oImagick = new imagick( $p_sFilePath.'[0]');      // Read First Page of PDF
 
-			    $oImagick->setImageFormat( "png" );         // Convert to png
-			    header('Content-Type: image/png');          // Send out
+                $oImagick->setResolution($p_iImageWidth, 0);  // If 0 is provided as a width or height parameter, aspect ratio is maintained
 
-			    echo $oImagick;
-			}#if
-	    }#if
-		$oImagick = new imagick($sSaveFilePath);      // Read First Page
-		header('Content-Type: image/png');          // Send out
-		echo $oImagick;
+                $oImagick->setImageFormat( "png" );         // Convert to png
+                header('Content-Type: image/png');          // Send out
+
+                echo $oImagick;
+            }#if
+        }#if
+        $oImagick = new imagick($sSaveFilePath);      // Read First Page
+        header('Content-Type: image/png');          // Send out
+        echo $oImagick;
     }else{
-	    echo 'Only Imagick is currently supported...';
-	}#if
+        echo 'Only Imagick is currently supported...';
+    }#if
 }
 #EOF
 

@@ -1,10 +1,18 @@
 <!DOCTYPE html>
 <?
-    if(!is_dir($_SERVER['DOCUMENT_ROOT'])){
-        $_SERVER['DOCUMENT_ROOT'] = dirname(dirname($_SERVER['SCRIPT_FILENAME']));
+    if(isset($_SERVER['WEB_ROOT'])){
+        $sRoot = $_SERVER['WEB_ROOT'];
     }
+    elseif(is_dir($_SERVER['DOCUMENT_ROOT'])){
+        $sRoot = $_SERVER['DOCUMENT_ROOT'];
+    }
+    else
+    {
+        $sRoot = dirname(dirname($_SERVER['SCRIPT_FILENAME']));
+    }
+
     $sCurrentWebDir = $_SERVER['REQUEST_URI'];
-	$sCurrentRealDir = urldecode($_SERVER['DOCUMENT_ROOT'].$sCurrentWebDir);
+	$sCurrentRealDir = urldecode($sRoot . $sCurrentWebDir);
 
     if(strpos($sCurrentRealDir,'?') !== false){
         $sCurrentRealDir = substr($sCurrentRealDir,0,strpos($sCurrentRealDir,'?'));
@@ -46,11 +54,11 @@
     if(strpos($sUrl,'?') !== false){
 		$sUrl = substr($sUrl,0,strpos($sUrl,'?'));
     }#if
-    
-	
+
+
     $sIndex = '';
     $sIndexHtml = '';
-        
+
     if($_SERVER['REQUEST_URI'] !== '/'){
         foreach(explode('/', $sUrl) as $t_sPart){
         	if(!empty($t_sPart)){
@@ -64,15 +72,15 @@
 	$aExtensions = array();
 	$aImages = array();
     foreach (scandir($sCurrentRealDir)as $t_sFileName) {
-        if(     
+        if(
         	!is_dir($sCurrentRealDir.$t_sFileName)
             AND strrpos($t_sFileName,'.')!== false
         ){
             $sExtension = substr($t_sFileName, strrpos($t_sFileName,'.'));
             $sExtension = strtolower($sExtension);
-			
+
         	$aExtensions[$sExtension] = substr($sExtension,1);
-			
+
 			if(in_array(
 				  $sExtension
 				, array(
@@ -101,7 +109,7 @@
 	<title>Index of <?= $sIndex;?></title>
 	<link href="/Directory_Listing_Theme/dirlisting.css" media="screen" rel="stylesheet" type="text/css" />
 	<link href="/Directory_Listing_Theme/thumbnails.css" media="screen" rel="stylesheet" type="text/css" />
-	
+
 	<link rel="shortcut icon" type="image/x-icon" href="/favicon.ico">
 </head>
 
@@ -111,7 +119,7 @@
 	<?
 		if(!empty($aImages)){
 			$sContent = '<ul class="thumbnails polaroids">';
-			foreach($aImages as $t_sImage => $t_sExtension){ 
+			foreach($aImages as $t_sImage => $t_sExtension){
 				$sContent .='<li class="'.$t_sExtension.'"><a href="'.$t_sImage.'" title="'.basename($t_sImage).'"><img src="/Directory_Listing_Theme/thumbnail.php?file=' . urlencode($t_sImage) . '" /></a>';
 			}#foreach
 			$sContent .= '</ul>';
