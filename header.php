@@ -6,8 +6,7 @@
     elseif(is_dir($_SERVER['DOCUMENT_ROOT'])){
         $sRoot = $_SERVER['DOCUMENT_ROOT'];
     }
-    else
-    {
+    else {
         $sRoot = dirname(dirname($_SERVER['SCRIPT_FILENAME']));
     }
 
@@ -72,8 +71,7 @@
 	$aExtensions = array();
 	$aImages = array();
     foreach (scandir($sCurrentRealDir)as $t_sFileName) {
-        if(
-        	!is_dir($sCurrentRealDir.$t_sFileName)
+        if( ! is_dir($sCurrentRealDir.$t_sFileName)
             AND strrpos($t_sFileName,'.')!== false
         ){
             $sExtension = substr($t_sFileName, strrpos($t_sFileName,'.'));
@@ -135,15 +133,17 @@
 
     <?if(!empty($aExtensions)):?>
     <form action="" method="get" class="small">
-    	Show only files with extension
- 		   <select name="P" size="1">
-    		   <option value="*">select a file type</option>
-				<?
-					foreach($aExtensions as $t_sExtension => $t_sName){
-					   echo '<option value="*'.$t_sExtension.'">*.'.$t_sName.'</option>';
-					}#foreach
-				?>
-	    </select>
+    	<label>
+            Show only files with extension
+               <select name="P" size="1">
+                   <option value="*">select a file type</option>
+                    <?
+                        foreach($aExtensions as $t_sExtension => $t_sName){
+                           echo '<option value="*'.$t_sExtension.'">*.'.$t_sName.'</option>';
+                        }#foreach
+                    ?>
+            </select>
+        </label>
     	<button type="submit">Go</button>
     </form>
     <?endif;?>

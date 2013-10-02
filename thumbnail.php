@@ -3,15 +3,15 @@
 //@WARNING: requires Imagick!
 
 //@FIXME:	This is a *very* basic example! Check and validations still need to be done.
-//@TODO:	Replace md5 with base64encode so a thumb can be traced back to it parent
+
+//@TODO:    Add Imagick version of drawing Error Images
+//@TODO:	Create GD compatible version
 //@TODO: 	Support AVI/MPEG thumbs
 //@TODO: 	Support SWF thumbs
 //@TODO: 	Support HTML thumbs
 //@TODO:	Make an animated GIF for multi pages PDFs, etc?
-//@TODO:	Create GD compatible version
-//@TODO:	Use Images for exceptions...
-//@DONE: 	Only resize if image size is larger than 200x200
-if(!is_dir($_SERVER['DOCUMENT_ROOT'])){
+
+if(!is_dir($_SERVER['DOCUMENT_ROOT'])) {
     $_SERVER['DOCUMENT_ROOT'] = dirname(dirname($_SERVER['SCRIPT_FILENAME']));
 }
 
@@ -19,23 +19,33 @@ $sRootDirectory = $_SERVER['DOCUMENT_ROOT'];
 $sCurrentDirectory = dirname(__FILE__) . '/';
 $sThumbDirectory = $sCurrentDirectory . 'thumbs/';
 
-if(isset($_GET['file'])){
+if(isset($_GET['DEBUG']) || isset($_GET['debug']) ) {
+    define('DEBUG', true);
+} else {
+    define('DEBUG', false);
+}
+
+if(isset($_GET['file'])) {
     $sFilePath = $sRootDirectory . $_GET['file'];
 }
-else{
+else {
     $sFilePath = $sThumbDirectory . 'empty.png';
 }
 
-outputThumbnail($sFilePath, $sThumbDirectory, 200);
+try {
+    outputThumbnail($sFilePath, $sThumbDirectory, 200);
+} catch(Exception $eAny) {
+    buildExceptionImage($eAny);
+}
 
-function outputThumbnail($p_sFilePath, $p_sThumbDirectory, $p_iImageWidth, $p_sOutputType = 'png'){
+function outputThumbnail($p_sFilePath, $p_sThumbDirectory, $p_iImageWidth, $p_sOutputType = 'png') {
 
     $bIOnlyKnowHowToWorkImagickByUsingTheCommandline = true;
 
-    if(!is_dir($p_sThumbDirectory)){
+    if(!is_dir($p_sThumbDirectory)) {
         throw new Exception('The directory to store the Thumbnails in does not exist at "'.$p_sThumbDirectory.'"');
     }
-    elseif(!is_writable($p_sThumbDirectory)){
+    elseif(!is_writable($p_sThumbDirectory)) {
         throw new Exception('The directory to store the Thumbnails is not writable "'.$p_sThumbDirectory.'"');
     }
 
@@ -45,22 +55,22 @@ function outputThumbnail($p_sFilePath, $p_sThumbDirectory, $p_iImageWidth, $p_sO
      * although it's a bit of a hack that might work.
      */
 
-    $sSaveFileName = md5(basename($p_sFilePath)) . '.'.$p_sOutputType;
+    $sSaveFileName = sanitize($p_sFilePath) . '.'.$p_sOutputType;
     $sSaveFilePath = $p_sThumbDirectory . $sSaveFileName;
 
-    if(class_exists('Imagick')){
+    if(class_exists('Imagick')) {
         $bRefresh=false;
-        if($bRefresh === true && is_file($sSaveFilePath)){
+        if($bRefresh === true && is_file($sSaveFilePath)) {
             unlink($sSaveFilePath);
         }#if
 
-        if(!is_file($sSaveFilePath)){
+        if(!is_file($sSaveFilePath)) {
             $aSize = getimagesize($p_sFilePath);
             // Create thumb for file
-            if($bIOnlyKnowHowToWorkImagickByUsingTheCommandline === true){
+            if($bIOnlyKnowHowToWorkImagickByUsingTheCommandline === true) {
                 // Save Locally
                 $iImageWidth = $p_iImageWidth;
-                if(isset($aSize[0]) && $aSize[0] <= $p_iImageWidth){
+                if(isset($aSize[0]) && $aSize[0] <= $p_iImageWidth) {
                     $iImageWidth = $aSize[0];
                 }#if
 
@@ -73,11 +83,11 @@ function outputThumbnail($p_sFilePath, $p_sThumbDirectory, $p_iImageWidth, $p_sO
 
                 $aResult = executeCommand($sCommand);
 
-                if($aResult['return'] !== 0){
+                if($aResult['return'] !== 0) {
                     throw new Exception('Error executing '.$aResult['stderr'] . '(full command : "'. $aResult['stdin'] .'")');
                 }#if
             }
-            else{
+            else {
                 // This probably still needs some fixing before it'll actually work :-S
                 $oImagick = new imagick( $p_sFilePath.'[0]');      // Read First Page of PDF
 
@@ -92,11 +102,13 @@ function outputThumbnail($p_sFilePath, $p_sThumbDirectory, $p_iImageWidth, $p_sO
         $oImagick = new imagick($sSaveFilePath);      // Read First Page
         header('Content-Type: image/png');          // Send out
         echo $oImagick;
-    }else{
-        echo 'Only Imagick is currently supported...';
+    } /** @noinspection SpellCheckingInspection */
+    elseif(function_exists('imagettfbbox') === true) {
+        throw new Exception('Currently only Imagick is supported');
+    }else {
+        throw new Exception('Either Imagick or the GD2 library need to installed on the server');
     }#if
 }
-#EOF
 
 //@TODO: This needs to be placed somewhere more suitable
 /*
@@ -108,7 +120,7 @@ function outputThumbnail($p_sFilePath, $p_sThumbDirectory, $p_iImageWidth, $p_sO
  * Standard error (stderr) please visit:
  *      http://en.wikipedia.org/wiki/Standard_streams
  */
-function executeCommand($p_sCommand, $p_sInput=''){
+function executeCommand($p_sCommand, $p_sInput='') {
 
     $rProcess = proc_open(
         $p_sCommand
@@ -137,3 +149,79 @@ function executeCommand($p_sCommand, $p_sInput=''){
         , 'return' => $iReturn
     );
 }
+
+
+function buildExceptionImage(\Exception $ex) {
+    $aMessage = array();
+    if (DEBUG === true) {
+        $aMessage[] = 'Uncaught ' . get_class($ex);
+        $aMessage[] = ' in ' . basename($ex->getFile()) . ':' . $ex->getLine();
+        $aMessage[] = "\n";
+    }
+    $aMessage[] = ' Error: ' . $ex->getMessage() . ' ';
+
+    $message = implode("\n", $aMessage);
+
+    $rImage = drawText($message, 10, '255.0.0.0');
+
+    imagerectangle($rImage, 0, 0, \imagesx($rImage) - 1, \imagesy($rImage) - 1, imagecolorallocatealpha($rImage, 255, 0, 0, 0));
+
+    header('Content-Type: image/png');
+    imagepng($rImage);
+    imagedestroy($rImage);
+}
+
+function drawText($p_sText, $p_dSize, $p_sRgba, $p_iAngle=0, $p_sFontFile=null) {
+    $text  = (string) $p_sText;
+    $size  = (float)  $p_dSize;
+    $angle = (int)    $p_iAngle;
+
+    if($p_sFontFile === null) {
+        $sFontFile = __DIR__ . '/DroidSans.ttf';
+    }
+    else {
+        $sFontFile = $p_sFontFile;
+    }
+
+    if(!is_file($sFontFile)) {
+        echo 'Could not find font ' . $sFontFile;
+        die;
+    }
+
+    if (1 !== preg_match('~^([\d]+?)\.([\d]+?)\.([\d]+?)\.([\d]+?)$~', $p_sRgba)) {
+        $sRgba = '0.0.0.0';
+    }
+    else {
+        $sRgba = $p_sRgba;
+    }
+    list($r, $g, $b, $a) = explode('.', $sRgba);
+
+    $size = max(8, min(127, intval($size)));
+    $r = max(0, min(255, intval($r)));
+    $g = max(0, min(255, intval($g)));
+    $b = max(0, min(255, intval($b)));
+    $a = max(0, min(127, intval($a)));
+
+    $box = imagettfbbox($size, $angle, $sFontFile, $text);
+    $width  = abs($box[4]) + abs($box[0]);// - $box[6];
+    $height = abs($box[3]) + abs($box[7]);// - $box[1];
+    $x = 0; // $width;
+    $y = $height - $box[1]; // $height;
+    $image = imagecreatetruecolor($width, $height);
+    imagesavealpha($image, true);
+    imagealphablending($image, true);
+
+    $transp = imagecolorallocatealpha($image, 255, 0, 0, 127);
+    imagefill($image, 0, 0, $transp);
+
+    $black = imagecolorallocatealpha($image, $r, $g, $b, $a);
+    imagettftext($image, $size, $angle, $x, $y, $black, $sFontFile, $text);
+
+    return $image;
+}
+
+function sanitize($p_sName){
+    return preg_replace(array('/\s/', '/\.[\.]+/', '/[^\w_\.\-]/'), array('_', '.', '__'), $p_sName);
+}
+
+#EOF
