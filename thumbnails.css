@@ -36,7 +36,7 @@ ul.polaroids a {
 ul.polaroids img {
 	border:1px solid #DDD;
 	display: block;
-	/*width: 190px;*/
+	width:100%;
 	margin-bottom: 12px;
 	margin-left: auto; 
 	margin-right: auto

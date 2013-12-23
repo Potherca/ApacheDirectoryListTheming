@@ -16,8 +16,13 @@ if(!is_dir($_SERVER['DOCUMENT_ROOT'])) {
 }
 
 $sRootDirectory = $_SERVER['DOCUMENT_ROOT'];
-$sCurrentDirectory = dirname(__FILE__) . '/';
-$sThumbDirectory = $sCurrentDirectory . 'thumbs/';
+
+if (isset($_SERVER['THUMBNAIL_DIRECTORY'])) {
+    $sThumbDirectory = $_SERVER['THUMBNAIL_DIRECTORY'];
+} else {
+    $sCurrentDirectory = dirname(__FILE__) . '/';
+    $sThumbDirectory =  $sCurrentDirectory. '.thumbs/';
+}
 
 if(isset($_GET['DEBUG']) || isset($_GET['debug']) ) {
     define('DEBUG', true);
@@ -33,7 +38,13 @@ else {
 }
 
 try {
-    outputThumbnail($sFilePath, $sThumbDirectory, 200);
+    if(strlen($sFilePath) - strrpos($sFilePath, '.svg') === 4) {
+        // Display SVG directly
+        header('Content-Type: image/svg+xml');
+        readfile($sFilePath);
+    } else {
+        outputThumbnail($sFilePath, $sThumbDirectory, 200);
+    }
 } catch(Exception $eAny) {
     buildExceptionImage($eAny);
 }
@@ -55,7 +66,7 @@ function outputThumbnail($p_sFilePath, $p_sThumbDirectory, $p_iImageWidth, $p_sO
      * although it's a bit of a hack that might work.
      */
 
-    $sSaveFileName = sanitize($p_sFilePath) . '.'.$p_sOutputType;
+    $sSaveFileName = sanitize($p_sFilePath) . '.' . $p_sOutputType;
     $sSaveFilePath = $p_sThumbDirectory . $sSaveFileName;
 
     if(class_exists('Imagick')) {
