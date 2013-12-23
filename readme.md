@@ -4,6 +4,13 @@ we can create a nicer looking directory listing.
 
 This project provides an easy way of achieving this. 
 
+## What it looks like
+
+Below is a screenshot of what the decorated result looks like. The screenshot was taken on my my laptop with a 1280x800 resolution.
+
+![screenshot](screenshot-01.png "Screenshot")
+
+
 ## Installation
 
 To enable this the following steps need to be taken:
@@ -81,9 +88,5 @@ To make sure we don't need each user to have his/her own theme directory we use
 a symlink, linking to the version currently checked out of the repository. Also,
 instead of having to add all those directives to each user, we simply include a 
 config file for a given directory.
-
-## What it looks like
-
-![screenshot](screenshot-01.png "Screenshot")
 
 <!-- EOF -->
