@@ -82,4 +82,8 @@ a symlink, linking to the version currently checked out of the repository. Also,
 instead of having to add all those directives to each user, we simply include a 
 config file for a given directory.
 
+## What it looks like
+
+![screenshot](screenshot-01.png "Screenshot")
+
 <!-- EOF -->
