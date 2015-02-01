@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<?
+<?php
     if(isset($_SERVER['WEB_ROOT'])){
         $sRoot = $_SERVER['WEB_ROOT'];
     }
@@ -62,7 +62,7 @@
         foreach(explode('/', $sUrl) as $t_sPart){
         	if(!empty($t_sPart)){
 		        $sIndex .= '/'.$t_sPart;
-		        $sIndexHtml .= '/'.'<a href="'.$sIndex.'">'.$t_sPart.'</a>';
+		        $sIndexHtml .= '/'.'<a href="' . urlencode($sIndex) . '">'.$t_sPart.'</a>';
         	}#if
         }#foreach
     }#if
@@ -114,7 +114,7 @@
 <body>
     <?= $sReadme; ?>
 
-	<?
+	<?php
 		if(!empty($aImages)){
 			$sContent = '<ul class="thumbnails polaroids">';
 			foreach($aImages as $t_sImage => $t_sExtension){
@@ -131,13 +131,15 @@
         <a href="http://<?= $_SERVER['SERVER_NAME']; ?>"><?= $_SERVER['SERVER_NAME'];?></a><?= $sIndexHtml;?>
     </h1>
 
-    <?if(!empty($aExtensions)):?>
+    <?php
+    if (!empty($aExtensions)) {
+    ?>
     <form action="" method="get" class="small">
     	<label>
             Show only files with extension
                <select name="P" size="1">
                    <option value="*">select a file type</option>
-                    <?
+                    <?php
                         foreach($aExtensions as $t_sExtension => $t_sName){
                            echo '<option value="*'.$t_sExtension.'">*.'.$t_sName.'</option>';
                         }#foreach
@@ -146,4 +148,6 @@
         </label>
     	<button type="submit">Go</button>
     </form>
-    <?endif;?>
+<?php 
+    }
+?>
