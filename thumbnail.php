@@ -4,13 +4,6 @@
 
 //@FIXME:	This is a *very* basic example! Check and validations still need to be done.
 
-//@TODO:    Add Imagick version of drawing Error Images
-//@TODO:	Create GD compatible version
-//@TODO: 	Support AVI/MPEG thumbs
-//@TODO: 	Support SWF thumbs
-//@TODO: 	Support HTML thumbs
-//@TODO:	Make an animated GIF for multi pages PDFs, etc?
-
 if(!is_dir($_SERVER['DOCUMENT_ROOT'])) {
     $_SERVER['DOCUMENT_ROOT'] = dirname(dirname($_SERVER['SCRIPT_FILENAME']));
 }
