@@ -6,7 +6,7 @@ This project provides an easy way of achieving this.
 
 ## What it looks like
 
-Below is a screenshot of what the decorated result looks like. The screenshot was taken on my my laptop with a 1280x800 resolution.
+Below is a screenshot of what the decorated result looks like. The screenshot was taken on my laptop with a 1280x800 resolution.
 
 ![screenshot](screenshot-01.png "Screenshot")
 
