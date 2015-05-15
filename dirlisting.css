@@ -137,6 +137,7 @@ body {
 	padding:3em;
 
     float: left;
+	clear:left;
 }
 
 .main-content {
