@@ -13,8 +13,11 @@ $sRootDirectory = $_SERVER['DOCUMENT_ROOT'];
 if (isset($_SERVER['THUMBNAIL_DIRECTORY'])) {
     $sThumbDirectory = $_SERVER['THUMBNAIL_DIRECTORY'];
 } else {
-    $sCurrentDirectory = dirname(__FILE__) . '/';
-    $sThumbDirectory =  $sCurrentDirectory. '.thumbs/';
+    $sThumbDirectory =  sys_get_temp_dir() . '/.thumbs/';
+}
+
+if (is_dir($sThumbDirectory) === false) {
+    mkdir($sThumbDirectory);
 }
 
 if(isset($_GET['DEBUG']) || isset($_GET['debug']) ) {
