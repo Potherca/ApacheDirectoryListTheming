@@ -1,5 +1,5 @@
 <?php
- date_default_timezone_set('Europe/Amsterdam');
+    require 'common.php';
 
     $sReadme = '';
     $aReadMeExtensions = array('.html','.md','.txt');
@@ -28,7 +28,7 @@
 
     <?php echo $_SERVER['SERVER_SIGNATURE'] ?>
 
-    <script src="/Directory_Listing_Theme/zepto.min.js"></script>
-    <script src="/Directory_Listing_Theme/functions.js"></script>
+    <script src="/Directory_Listing_Theme/<?= $sThemeDir; ?>zepto.min.js"></script>
+    <script src="/Directory_Listing_Theme/<?= $sThemeDir; ?>functions.js"></script>
 </body>
 </html>

@@ -1,5 +1,8 @@
 <!DOCTYPE html>
 <?php
+
+    require 'common.php';
+
     if(isset($_SERVER['WEB_ROOT'])){
         $sRoot = $_SERVER['WEB_ROOT'];
     }
@@ -107,8 +110,8 @@
     <meta charset="utf-8" />
     <title>Index of <?= $sIndex;?></title>
 
-	<link href="/Directory_Listing_Theme/dirlisting.css" rel="stylesheet" />
-	<link href="/Directory_Listing_Theme/thumbnails.css" rel="stylesheet" />
+	<link href="/Directory_Listing_Theme/<?= $sThemeDir; ?>dirlisting.css" rel="stylesheet" />
+	<link href="/Directory_Listing_Theme/<?= $sThemeDir; ?>thumbnails.css" rel="stylesheet" />
 
 	<link rel="shortcut icon" type="image/x-icon" href="/favicon.ico">
 </head>
