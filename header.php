@@ -104,9 +104,11 @@
 ?>
 <html>
 <head>
-	<title>Index of <?= $sIndex;?></title>
-	<link href="/Directory_Listing_Theme/dirlisting.css" media="screen" rel="stylesheet" type="text/css" />
-	<link href="/Directory_Listing_Theme/thumbnails.css" media="screen" rel="stylesheet" type="text/css" />
+    <meta charset="utf-8" />
+    <title>Index of <?= $sIndex;?></title>
+
+	<link href="/Directory_Listing_Theme/dirlisting.css" rel="stylesheet" />
+	<link href="/Directory_Listing_Theme/thumbnails.css" rel="stylesheet" />
 
 	<link rel="shortcut icon" type="image/x-icon" href="/favicon.ico">
 </head>
@@ -131,10 +133,18 @@
         <a href="http://<?= $_SERVER['SERVER_NAME']; ?>"><?= $_SERVER['SERVER_NAME'];?></a><?= $sIndexHtml;?>
     </h1>
 
+    <label>
+        Filter by name:
+        <input id="filter" />
+    </label>
+    <!-- @TODO: Add extension filter using JS instead of server side
     <?php
     if (!empty($aExtensions)) {
     ?>
     <form action="" method="get" class="small">
+        <p>
+        </p>
+        <p>
     	<label>
             Show only files with extension
                <select name="P" size="1">
@@ -148,6 +158,6 @@
         </label>
     	<button type="submit">Go</button>
     </form>
-<?php 
+<?php
     }
-?>
+?> -->

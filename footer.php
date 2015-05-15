@@ -27,5 +27,8 @@
     <?php echo $sReadme; ?>
 
     <?php echo $_SERVER['SERVER_SIGNATURE'] ?>
+
+    <script src="/Directory_Listing_Theme/zepto.min.js"></script>
+    <script src="/Directory_Listing_Theme/functions.js"></script>
 </body>
 </html>
