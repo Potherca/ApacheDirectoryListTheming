@@ -1,6 +1,6 @@
 <?php require 'common.php';?>
             </div><!-- .panel-body -->
-        </div><!-- .panel -->
+        </div><!-- .main-content -->
     </div><!-- .container -->
 
     <?= $sReadme ?>

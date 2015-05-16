@@ -7,8 +7,13 @@ $aConfig = [
     "assets" => []
 ];
 
+$bUseBootstrap = false;
+
 $sConfigFile = 'config.json';
 if (is_file($sConfigFile)) {
+
+    $bUseBootstrap = true;
+
     if (!is_readable($sConfigFile)) {
         throw new Exception("Could not read configuration file");
     } else {
@@ -19,7 +24,11 @@ if (is_file($sConfigFile)) {
     }
 }
 
-if (is_dir('themes/' . $aConfig['theme'])) {
+if ($bUseBootstrap === true
+    && is_dir(__DIR__ . '/vendor/bower-asset/bootswatch/' . $aConfig['theme'])
+) {
+    $sThemeDir = 'vendor/bower-asset/bootswatch/' . $aConfig['theme'] . '/';
+} elseif (is_dir(__DIR__ . '/themes/' . $aConfig['theme'])) {
     $sThemeDir = 'themes/' . $aConfig['theme'] . '/';
 } else {
     throw new Exception('Could not find theme directory "' . $aConfig['theme'] . '"');
@@ -28,15 +37,23 @@ if (is_dir('themes/' . $aConfig['theme'])) {
 
 $aAssets = [
     'css' => [
-       getAssetPath('dirlisting.css', $sThemeDir),
+        getAssetPath('bootstrap.css', $sThemeDir),
         getAssetPath('table.css', $sThemeDir),
         getAssetPath('thumbnails.css', $sThemeDir),
     ],
     'js' => [
-        'vendor/bower-asset/zepto/zepto.min.js',
+        'vendor/bower-asset/jquery/dist/jquery.js',
         getAssetPath('functions.js', $sThemeDir),
     ],
 ];
+
+if ($bUseBootstrap === true) {
+    array_unshift(
+        $aAssets['css'],
+        'vendor/bower-asset/bootstrap/dist/css/bootstrap.min.css',
+        'vendor/bower-asset/bootstrap/dist/css/bootstrap-theme.min.css'
+    );
+}
 
 $aAssets = array_merge_recursive($aAssets, $aConfig['assets']);
 
@@ -90,7 +107,7 @@ if(strpos($sUrl,'?') !== false){
 
 
 $sIndex = urldecode($_SERVER['REQUEST_URI']);
-$sIndexHtml = '/<a href="http://' . $_SERVER['SERVER_NAME'] .'">' . $_SERVER['SERVER_NAME'] . '</a>';
+$sIndexHtml = '<li><a href="http://' . $_SERVER['SERVER_NAME'] .'">' . $_SERVER['SERVER_NAME'] . '</a></li>';
 
 if($_SERVER['REQUEST_URI'] !== '/'){
     $aParts = explode('/', trim($sUrl, '/'));
@@ -102,7 +119,13 @@ if($_SERVER['REQUEST_URI'] !== '/'){
             $sIndex .= '/'.$t_sPart;
 
             $sUrl .= '/' . urlencode($t_sPart);
-            $sIndexHtml .= '<li><a href="' . $sUrl . '">'.$t_sPart.'</a></li>';
+            $sIndexHtml .= '<li><a';
+            if ($t_iIndex === $iCount) {
+                $sIndexHtml .= ' class="active"';
+            } else {
+                $sIndexHtml .= ' class="text-muted"';
+            }
+            $sIndexHtml .= ' href="' . $sUrl . '">'.$t_sPart.'</a></li>';
         }#if
     }#foreach
 }#if
@@ -174,9 +197,15 @@ foreach($aConfig['readmeExtensions'] as $t_sExtension){
 
 function getAssetPath($p_sFile, $sThemeDir) {
     $sPath = '';
-    if (is_file($sThemeDir . $p_sFile)) {
+
+    $aParts = explode('.', $p_sFile);
+    array_splice($aParts, -1, 0, array('min'));
+
+    if (is_file(__DIR__ . '/' . $sThemeDir . $p_sFile)) {
         $sPath = $sThemeDir . $p_sFile;
-    } elseif ('/themes/default/' . $p_sFile) {
+    } elseif (is_file(__DIR__ . '/' . $sThemeDir . implode('.', $aParts))) {
+        $sPath = $sThemeDir . implode('.', $aParts);
+    } elseif (is_file(__DIR__ . '/' . '/themes/default/' . $p_sFile)) {
         $sPath = '/themes/default/' . $p_sFile;
     } else {
         throw new Exception('Could not find asset "' . $p_sFile . '"');

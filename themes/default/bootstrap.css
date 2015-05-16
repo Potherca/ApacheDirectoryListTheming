@@ -315,3 +315,13 @@ table {
 
 
 address { clear: both;}
+
+
+.breadcrumb li {
+  float: left;
+  display: block;
+}
+
+.breadcrumb li::before {
+  content: "/"
+}

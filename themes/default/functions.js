@@ -139,6 +139,6 @@
    }
 
    addFilter();
-}(Zepto));
+}(jQuery));
 
 /*EOF*/

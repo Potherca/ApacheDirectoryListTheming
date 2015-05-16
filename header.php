@@ -13,21 +13,34 @@
 </head>
 
 <body>
+    <div class="container">
+        <div class="header clearfix">
+            <h1 class="text-muted">
+                <span>Directory index</span>
+            </h1>
+            <ol class="breadcrumb">
+                <?= $sIndexHtml ?>
+            </ol>
+        </div><!-- .header -->
+
         <?php if($sReadmeHtml):?>
-        <div class="page readme" style="max-height: 24em; overflow: auto;">
+        <div class="page readme | jumbotron" style="max-height: 24em; overflow: auto;">
             <?= $sReadmeHtml ?>
-        </div>
+        </div><!-- .readme -->
         <?php endif;?>
 
         <?= $sThumbnailHtml ?>
 
-    <div class="page main-content">
-		<h1>
-		    <span>Directory index for</span>
-		    <?= $sIndexHtml ?>
-		</h1>
-
-		<label>
-		    Filter by name:
-		    <input id="filter" />
-		</label>
+        <div class="page main-content | container panel panel-primary">
+            <div class="panel-body">
+                <label>
+                    Filter by name:
+                    <input id="filter" />
+                </label>
+<!--
+            </div>.panel-body
+        </div>.main-content
+    </div>.container
+</body>
+</html>
+-->

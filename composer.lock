@@ -1,35 +1,297 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "b16094a14987a1ddf09f34b22e946a76",
+    "hash": "4003093c47e80429063ea6511d243fea",
     "packages": [
         {
-            "name": "bower-asset/zepto",
-            "version": "1.1.6",
+            "name": "bower-asset/bootstrap",
+            "version": "v3.3.4",
             "source": {
                 "type": "git",
-                "url": "https://github.com/components/zepto.git",
-                "reference": "508d1a05bde2454251a86273ccef7a3368857719"
+                "url": "https://github.com/twbs/bootstrap.git",
+                "reference": "a10eb60bc0b07b747fa0c4ebd8821eb7307bd07f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/components/zepto/zipball/508d1a05bde2454251a86273ccef7a3368857719",
-                "reference": "508d1a05bde2454251a86273ccef7a3368857719",
+                "url": "https://api.github.com/repos/twbs/bootstrap/zipball/a10eb60bc0b07b747fa0c4ebd8821eb7307bd07f",
+                "reference": "a10eb60bc0b07b747fa0c4ebd8821eb7307bd07f",
+                "shasum": ""
+            },
+            "require": {
+                "bower-asset/jquery": ">=1.9.1"
+            },
+            "type": "bower-asset-library",
+            "extra": {
+                "bower-asset-main": [
+                    "less/bootstrap.less",
+                    "dist/css/bootstrap.css",
+                    "dist/js/bootstrap.js",
+                    "dist/fonts/glyphicons-halflings-regular.eot",
+                    "dist/fonts/glyphicons-halflings-regular.svg",
+                    "dist/fonts/glyphicons-halflings-regular.ttf",
+                    "dist/fonts/glyphicons-halflings-regular.woff",
+                    "dist/fonts/glyphicons-halflings-regular.woff2"
+                ],
+                "bower-asset-ignore": [
+                    "/.*",
+                    "_config.yml",
+                    "CNAME",
+                    "composer.json",
+                    "CONTRIBUTING.md",
+                    "docs",
+                    "js/tests",
+                    "test-infra"
+                ]
+            },
+            "description": "The most popular front-end framework for developing responsive, mobile first projects on the web.",
+            "keywords": [
+                "css",
+                "framework",
+                "front-end",
+                "js",
+                "less",
+                "mobile-first",
+                "responsive",
+                "web"
+            ]
+        },
+        {
+            "name": "bower-asset/bootswatch",
+            "version": "v3.3.4",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/thomaspark/bootswatch.git",
+                "reference": "2d82b960b86ba9c6205060827f33a4622e64b926"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/thomaspark/bootswatch/zipball/2d82b960b86ba9c6205060827f33a4622e64b926",
+                "reference": "2d82b960b86ba9c6205060827f33a4622e64b926",
+                "shasum": ""
+            },
+            "require": {
+                "bower-asset/bootstrap": "~3.3.4"
+            },
+            "require-dev": {
+                "bower-asset/bootstrap-sass-official": "~3.3.4",
+                "bower-asset/font-awesome": "~4.0.0",
+                "bower-asset/html5shiv": "~3.7.0",
+                "bower-asset/respond": "~1.4.2"
+            },
+            "type": "bower-asset-library",
+            "extra": {
+                "bower-asset-ignore": [
+                    "2",
+                    "api",
+                    "assets",
+                    "bower_components",
+                    "custom",
+                    "default",
+                    "global",
+                    "help",
+                    "tests",
+                    "_config.yml",
+                    ".gitignore",
+                    ".travis.yml",
+                    "CNAME",
+                    "composer.json",
+                    "favicon.ico",
+                    "Gemfile",
+                    "Gruntfile.js",
+                    "index.html",
+                    "package.json",
+                    "*/index.html"
+                ]
+            },
+            "license": [
+                "MIT"
+            ],
+            "description": "Bootswatch is a collection of themes for Bootstrap."
+        },
+        {
+            "name": "bower-asset/fuelux",
+            "version": "3.7.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/ExactTarget/fuelux.git",
+                "reference": "59859bd43c24ef50e716dc84f9fcafe4a7729e0c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/ExactTarget/fuelux/zipball/59859bd43c24ef50e716dc84f9fcafe4a7729e0c",
+                "reference": "59859bd43c24ef50e716dc84f9fcafe4a7729e0c",
+                "shasum": ""
+            },
+            "require": {
+                "bower-asset/bootstrap": "dev-3.x,|3.x",
+                "bower-asset/jquery": "dev-default|*",
+                "bower-asset/moment": "dev-2.x,|2.x",
+                "bower-asset/requirejs": "dev-2.x,|2.x"
+            },
+            "require-dev": {
+                "bower-asset/blanket": "dev-1.x,|1.x",
+                "bower-asset/jquery": "*",
+                "bower-asset/jquery-1.9.1": "1.9.1",
+                "bower-asset/qunit": "~1.14.0",
+                "bower-asset/requirejs-text": "dev-2.x,|2.x",
+                "bower-asset/underscore": "dev-1.x,|1.x"
+            },
+            "type": "bower-asset-library",
+            "extra": {
+                "bower-asset-main": [
+                    "dist/css/fuelux.css",
+                    "dist/js/fuelux.js",
+                    "dist/fonts/fuelux.eot",
+                    "dist/fonts/fuelux.svg",
+                    "dist/fonts/fuelux.ttf",
+                    "dist/fonts/fuelux.woff"
+                ],
+                "bower-asset-ignore": [
+                    "**/.*",
+                    "_*",
+                    "*.yml",
+                    "BACKLOG.md",
+                    "data.js",
+                    "dev",
+                    "devserver.js",
+                    "dist/fuelux.zip",
+                    "Gruntfile.js",
+                    "index.css",
+                    "index.html",
+                    "index.js",
+                    "node_modules",
+                    "Procfile",
+                    "test"
+                ]
+            },
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "description": "Extending Bootstrap with additional lightweight JavaScript controls.",
+            "keywords": [
+                "application",
+                "bootstrap",
+                "controls",
+                "css",
+                "exacttarget",
+                "front-end",
+                "fuel ux",
+                "fuelux",
+                "js",
+                "salesforce",
+                "user interface",
+                "web"
+            ]
+        },
+        {
+            "name": "bower-asset/jquery",
+            "version": "2.1.4",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/jquery/jquery.git",
+                "reference": "7751e69b615c6eca6f783a81e292a55725af6b85"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/jquery/jquery/zipball/7751e69b615c6eca6f783a81e292a55725af6b85",
+                "reference": "7751e69b615c6eca6f783a81e292a55725af6b85",
+                "shasum": ""
+            },
+            "require-dev": {
+                "bower-asset/qunit": "1.14.0",
+                "bower-asset/requirejs": "2.1.10",
+                "bower-asset/sinon": "1.8.1",
+                "bower-asset/sizzle": "2.1.1-patch2"
+            },
+            "type": "bower-asset-library",
+            "extra": {
+                "bower-asset-main": "dist/jquery.js",
+                "bower-asset-ignore": [
+                    "**/.*",
+                    "build",
+                    "dist/cdn",
+                    "speed",
+                    "test",
+                    "*.md",
+                    "AUTHORS.txt",
+                    "Gruntfile.js",
+                    "package.json"
+                ]
+            },
+            "license": [
+                "MIT"
+            ],
+            "keywords": [
+                "javascript",
+                "jquery",
+                "library"
+            ]
+        },
+        {
+            "name": "bower-asset/moment",
+            "version": "2.10.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/moment/moment.git",
+                "reference": "25cc720fbaab7323a1016cd0beb6a36e349c41be"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/moment/moment/zipball/25cc720fbaab7323a1016cd0beb6a36e349c41be",
+                "reference": "25cc720fbaab7323a1016cd0beb6a36e349c41be",
                 "shasum": ""
             },
             "type": "bower-asset-library",
             "extra": {
-                "bower-asset-main": "./zepto.js",
+                "bower-asset-main": "moment.js",
                 "bower-asset-ignore": [
-                    "*.md",
-                    ".gitignore",
-                    "Makefile"
+                    "**/.*",
+                    "benchmarks",
+                    "bower_components",
+                    "meteor",
+                    "node_modules",
+                    "scripts",
+                    "tasks",
+                    "test",
+                    "component.json",
+                    "composer.json",
+                    "CONTRIBUTING.md",
+                    "ender.js",
+                    "Gruntfile.js",
+                    "Moment.js.nuspec",
+                    "package.js",
+                    "package.json"
                 ]
+            }
+        },
+        {
+            "name": "bower-asset/requirejs",
+            "version": "2.1.17",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/jrburke/requirejs-bower.git",
+                "reference": "281c3e0edcfe479543f8276a6808db4e5c6a96a4"
             },
-            "description": "Shim repository for the Zepto.js JavaScript library."
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/jrburke/requirejs-bower/zipball/281c3e0edcfe479543f8276a6808db4e5c6a96a4",
+                "reference": "281c3e0edcfe479543f8276a6808db4e5c6a96a4",
+                "shasum": ""
+            },
+            "type": "bower-asset-library",
+            "extra": {
+                "bower-asset-main": "require.js"
+            },
+            "license": [
+                "new BSD, and MIT"
+            ],
+            "description": "A file and module loader for JavaScript",
+            "keywords": [
+                "AMD"
+            ]
         },
         {
             "name": "fxp/composer-asset-plugin",
