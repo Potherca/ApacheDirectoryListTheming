@@ -10,6 +10,7 @@
     ],
     "require": {
         "fxp/composer-asset-plugin": "^1.0",
-        "bower-asset/zepto": "^1.1.6"
+        "bower-asset/zepto": "^1.1.6",
+        "league/commonmark": "^0.8.0"
     }
 }

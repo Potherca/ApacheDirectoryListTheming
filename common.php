@@ -32,7 +32,7 @@ $aAssets = [
         getAssetPath('thumbnails.css', $sThemeDir),
     ],
     'js' => [
-        'zepto/zepto.min.js',
+        'vendor/bower-asset/zepto/zepto.min.js',
         getAssetPath('functions.js', $sThemeDir),
     ],
 ];
