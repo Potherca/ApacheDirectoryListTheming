@@ -65,8 +65,9 @@ foreach($aConfig['readmePrefixes'] as $t_sPrefix){
         if(file_exists($sReadMeFilePath)){
             $sReadmeContent = file_get_contents($sReadMeFilePath);
             if($t_sExtension === '.md'){
-                require 'markdown.php';
-                $sReadmeHtml = markdown($sReadmeContent);
+                require 'vendor/autoload.php';
+				$converter = new League\CommonMark\CommonMarkConverter\CommonMarkConverter();
+                $sReadmeHtml = $converter->convertToHtml($sReadmeContent);
             }
             elseif($t_sExtension === '.txt'){
                 $sReadmeHtml = '<div style="white-space: pre-wrap;">'.$sReadmeContent.'</div>';
