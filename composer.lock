@@ -1,0 +1,99 @@
+{
+    "_readme": [
+        "This file locks the dependencies of your project to a known state",
+        "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "This file is @generated automatically"
+    ],
+    "hash": "f16da349a31b06da1af0737a0c534568",
+    "packages": [
+        {
+            "name": "bower-asset/zepto",
+            "version": "1.1.6",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/components/zepto.git",
+                "reference": "508d1a05bde2454251a86273ccef7a3368857719"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/components/zepto/zipball/508d1a05bde2454251a86273ccef7a3368857719",
+                "reference": "508d1a05bde2454251a86273ccef7a3368857719",
+                "shasum": ""
+            },
+            "type": "bower-asset-library",
+            "extra": {
+                "bower-asset-main": "./zepto.js",
+                "bower-asset-ignore": [
+                    "*.md",
+                    ".gitignore",
+                    "Makefile"
+                ]
+            },
+            "description": "Shim repository for the Zepto.js JavaScript library."
+        },
+        {
+            "name": "fxp/composer-asset-plugin",
+            "version": "v1.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/francoispluchino/composer-asset-plugin.git",
+                "reference": "687d64b299de816fa1d9d48fd3ba3a7e22edda59"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/francoispluchino/composer-asset-plugin/zipball/687d64b299de816fa1d9d48fd3ba3a7e22edda59",
+                "reference": "687d64b299de816fa1d9d48fd3ba3a7e22edda59",
+                "shasum": ""
+            },
+            "require": {
+                "composer-plugin-api": "1.0.0",
+                "php": ">=5.3.3"
+            },
+            "require-dev": {
+                "composer/composer": "~1.0@dev"
+            },
+            "type": "composer-plugin",
+            "extra": {
+                "class": "Fxp\\Composer\\AssetPlugin\\FxpAssetPlugin",
+                "branch-alias": {
+                    "dev-master": "1.0-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Fxp\\Composer\\AssetPlugin\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "François Pluchino",
+                    "email": "francois.pluchino@gmail.com"
+                }
+            ],
+            "description": "NPM/Bower Dependency Manager for Composer",
+            "homepage": "https://github.com/francoispluchino/composer-asset-plugin",
+            "keywords": [
+                "asset",
+                "bower",
+                "composer",
+                "dependency manager",
+                "nodejs",
+                "npm",
+                "package"
+            ],
+            "time": "2015-04-17 08:58:57"
+        }
+    ],
+    "packages-dev": [],
+    "aliases": [],
+    "minimum-stability": "stable",
+    "stability-flags": [],
+    "prefer-stable": false,
+    "prefer-lowest": false,
+    "platform": [],
+    "platform-dev": []
+}
