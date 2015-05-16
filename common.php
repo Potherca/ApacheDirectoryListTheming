@@ -1,5 +1,26 @@
 <?php
 
+$aBootswatchThemes = [
+    'Cosmo',
+    'Cyborg',
+    'Darkly',
+    'Flatly',
+    'Journal',
+    'Kingboard',
+    'Lumen',
+    'Paper',
+    'React',
+    'Readable',
+    'Sandstone',
+    'Simplex',
+    'Slate',
+    'Spacelab',
+    'Superhero',
+    'United',
+    'Yeti',
+    'Zerif',
+];
+
 $aConfig = [
     "theme" => "default",
     "readmePrefixes" => ["readme","README","ReadMe"],
@@ -24,7 +45,12 @@ if (is_file($sConfigFile)) {
     }
 }
 
-if ($bUseBootstrap === true
+if (isset($_GET['theme'])
+    && in_array(ucfirst($_GET['theme']), $aBootswatchThemes)
+) {
+    $bUseBootstrap === true;
+    $sThemeDir = 'vendor/bower-asset/bootswatch/' . $_GET['theme'] . '/';
+}elseif ($bUseBootstrap === true
     && is_dir(__DIR__ . '/vendor/bower-asset/bootswatch/' . $aConfig['theme'])
 ) {
     $sThemeDir = 'vendor/bower-asset/bootswatch/' . $aConfig['theme'] . '/';
@@ -83,8 +109,8 @@ foreach($aConfig['readmePrefixes'] as $t_sPrefix){
         if(file_exists($sReadMeFilePath)){
             $sReadmeContent = file_get_contents($sReadMeFilePath);
             if($t_sExtension === '.md'){
-                require 'vendor/autoload.php';
-				$converter = new League\CommonMark\CommonMarkConverter\CommonMarkConverter();
+                require __DIR__ . '/vendor/autoload.php';
+				$converter = new League\CommonMark\CommonMarkConverter();
                 $sReadmeHtml = $converter->convertToHtml($sReadmeContent);
             }
             elseif($t_sExtension === '.txt'){
