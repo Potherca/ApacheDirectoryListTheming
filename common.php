@@ -28,6 +28,7 @@ if (is_dir('themes/' . $aConfig['theme'])) {
 
 $aAssets = [
     'css' => [
+       getAssetPath('dirlisting.css', $sThemeDir),
         getAssetPath('table.css', $sThemeDir),
         getAssetPath('thumbnails.css', $sThemeDir),
     ],
