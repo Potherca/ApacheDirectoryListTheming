@@ -122,7 +122,6 @@
            });
 
            $element.keyup(function(e) {
-               console.log('!');
                 if ($.inArray(e.keyCode, keys) === -1) {
                     var val = $element.val().removeDiacritics().toLowerCase();
 
