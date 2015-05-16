@@ -5,7 +5,11 @@
 
     <?= $sReadme ?>
 
-    <?= $_SERVER['SERVER_SIGNATURE'] ?>
+    <footer class="footer">
+        <div class="container">
+            <?= $_SERVER['SERVER_SIGNATURE'] ?>
+        </div>
+    </footer>
 
     <?php foreach($aAssets['js'] as $sJavascript):?>
         <script src="/Directory_Listing_Theme/<?=$sJavascript?>"></script>
