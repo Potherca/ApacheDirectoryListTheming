@@ -1,0 +1,30 @@
+.main-content table {
+    table-layout: auto;
+    width: 80%;
+}
+
+.main-content td {
+    text-align: left;
+}
+
+.main-content td:nth-child(1) { /*icon*/
+    width: 26px;
+}
+
+.main-content td:nth-child(2) { /*name*/
+    opacity: 0.8;
+}
+
+.main-content td:nth-child(3) { /*last modified*/
+    opacity: 0.8;
+}
+
+.main-content td:nth-child(4) { /*size*/
+    opacity: 0.8;
+}
+
+.main-content td:nth-child(5) { /*description*/
+    opacity: 0.8;
+}
+
+/*EOF*/
