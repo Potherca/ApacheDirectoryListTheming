@@ -54,7 +54,7 @@ HTML;
         $this->init();
 
         $sIndex = '';
-        $sIndexHtml = '';
+        $sIndexHtml = $this->buildBreadcrumbHtml();
         $sReadmeHtml = $this->sReadmeHtml;
         $sThumbnailHtml = $this->sThumbnailHtml;
 
@@ -246,37 +246,6 @@ HTML;
             }#foreach
         }#foreach
 
-        /* Set Title */
-        $sUrl = urldecode($_SERVER['REQUEST_URI']);
-        if (strpos($sUrl, '?') !== false) {
-            $sUrl = substr($sUrl, 0, strpos($sUrl, '?'));
-        }#if
-
-
-        $sIndex = urldecode($_SERVER['REQUEST_URI']);
-        $sIndexHtml = '<li><a href="http://' . $_SERVER['SERVER_NAME'] . '">' . $_SERVER['SERVER_NAME'] . '</a></li>';
-
-        if ($_SERVER['REQUEST_URI'] !== '/') {
-            $aParts = explode('/', trim($sUrl, '/'));
-            $iCount = count($aParts) - 1;
-            $sUrl = 'http://' . $_SERVER['SERVER_NAME'];
-
-            foreach ($aParts as $t_iIndex => $t_sPart) {
-                if (!empty($t_sPart)) {
-                    $sIndex .= '/' . $t_sPart;
-
-                    $sUrl .= '/' . urlencode($t_sPart);
-                    $sIndexHtml .= '<li><a';
-                    if ($t_iIndex === $iCount) {
-                        $sIndexHtml .= ' class="active"';
-                    } else {
-                        $sIndexHtml .= ' class="text-muted"';
-                    }
-                    $sIndexHtml .= ' href="' . $sUrl . '">' . $t_sPart . '</a></li>';
-                }#if
-            }#foreach
-        }#if
-
         /* Sort out extension filter and thumbnail for images/pdf/etc. */
         $aExtensions = array();
         $aImages = array();
@@ -374,6 +343,44 @@ HTML;
     private function getRootDirectory()
     {
         return realpath(__DIR__ . '/../');
+    }
+
+    /**
+     * @return string
+     */
+    private function buildBreadcrumbHtml()
+    {
+        /* Set Title */
+        $sUrl = urldecode($_SERVER['REQUEST_URI']);
+        if (strpos($sUrl, '?') !== false) {
+            $sUrl = substr($sUrl, 0, strpos($sUrl, '?'));
+        }#if
+
+        $sIndex = urldecode($_SERVER['REQUEST_URI']);
+        $sIndexHtml = '<li><a href="http://' . $_SERVER['SERVER_NAME'] . '">' . $_SERVER['SERVER_NAME'] . '</a></li>';
+
+        if ($_SERVER['REQUEST_URI'] !== '/') {
+            $aParts = explode('/', trim($sUrl, '/'));
+            $iCount = count($aParts) - 1;
+            $sUrl = 'http://' . $_SERVER['SERVER_NAME'];
+
+            foreach ($aParts as $t_iIndex => $t_sPart) {
+                if (!empty($t_sPart)) {
+                    $sIndex .= '/' . $t_sPart;
+
+                    $sUrl .= '/' . urlencode($t_sPart);
+                    $sIndexHtml .= '<li><a';
+                    if ($t_iIndex === $iCount) {
+                        $sIndexHtml .= ' class="active"';
+                    } else {
+                        $sIndexHtml .= ' class="text-muted"';
+                    }
+                    $sIndexHtml .= ' href="' . $sUrl . '">' . $t_sPart . '</a></li>';
+                }#if
+            }#foreach
+        }#if
+
+        return $sIndexHtml;
     }
 
 }
