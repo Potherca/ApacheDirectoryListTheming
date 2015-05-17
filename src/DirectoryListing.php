@@ -53,7 +53,7 @@ HTML;
 
         $this->init();
 
-        $sIndex = '';
+        $sIndex = $this->buildTitle();
         $sIndexHtml = $this->buildBreadcrumbHtml();
         $sReadmeHtml = $this->sReadmeHtml;
         $sThumbnailHtml = $this->sThumbnailHtml;
@@ -356,7 +356,6 @@ HTML;
             $sUrl = substr($sUrl, 0, strpos($sUrl, '?'));
         }#if
 
-        $sIndex = urldecode($_SERVER['REQUEST_URI']);
         $sIndexHtml = '<li><a href="http://' . $_SERVER['SERVER_NAME'] . '">' . $_SERVER['SERVER_NAME'] . '</a></li>';
 
         if ($_SERVER['REQUEST_URI'] !== '/') {
@@ -366,7 +365,6 @@ HTML;
 
             foreach ($aParts as $t_iIndex => $t_sPart) {
                 if (!empty($t_sPart)) {
-                    $sIndex .= '/' . $t_sPart;
 
                     $sUrl .= '/' . urlencode($t_sPart);
                     $sIndexHtml .= '<li><a';
@@ -381,6 +379,19 @@ HTML;
         }#if
 
         return $sIndexHtml;
+    }
+
+    /**
+     * @return string
+     */
+    private function buildTitle()
+    {
+        $sUrl = urldecode($_SERVER['REQUEST_URI']);
+        if (strpos($sUrl, '?') !== false) {
+            $sUrl = substr($sUrl, 0, strpos($sUrl, '?'));
+        }#if
+
+        return $sUrl;
     }
 
 }
