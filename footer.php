@@ -1,18 +1,11 @@
-<?php require 'common.php';?>
-            </div><!-- .panel-body -->
-        </div><!-- .main-content -->
-    </div><!-- .container -->
+<?php
 
-    <?= $sReadme ?>
+namespace Potherca\Apache\Modules\AutoIndex;
 
-    <footer class="footer">
-        <div class="container">
-            <?= $_SERVER['SERVER_SIGNATURE'] ?>
-        </div>
-    </footer>
+require 'vendor/autoload.php';
 
-    <?php foreach($aAssets['js'] as $sJavascript):?>
-        <script src="/Directory_Listing_Theme/<?=$sJavascript?>"></script>
-    <?php endforeach?>
-</body>
-</html>
+$directoryListing = new DirectoryListing();
+
+echo $directoryListing->footer();
+
+/*EOF*/

@@ -14,5 +14,13 @@
         "bower-asset/fuelux": "^3.7",
         "bower-asset/bootswatch": "^3.3",
         "league/commonmark": "^0.8.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Potherca\\Apache\\Modules\\AutoIndex\\" : "src"
+        }
+    },
+    "extra": {
+        "asset-optimize-with-conjunctive" : false
     }
 }
