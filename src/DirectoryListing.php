@@ -9,17 +9,45 @@ class DirectoryListing
 
     private $aAssets = ['css' => [], 'js' => []];
 
-    private $sReadmeHtml = '';
-    private $sThumbnailHtml = '';
-    private $sReadme = '';
+    private $aBootswatchThemes = [
+        'Cosmo',
+        'Cyborg',
+        'Darkly',
+        'Flatly',
+        'Journal',
+        'Kingboard',
+        'Lumen',
+        'Paper',
+        'React',
+        'Readable',
+        'Sandstone',
+        'Simplex',
+        'Slate',
+        'Spacelab',
+        'Superhero',
+        'United',
+        'Yeti',
+        'Zerif',
+    ];
+
+    private $aConfig = [
+        "theme" => "default",
+        "readmePrefixes" => ["readme", "README", "ReadMe"],
+        "readmeExtensions" => [".html", ".md", ".txt"],
+        "assets" => []
+    ];
+
+    private $bUseBootstrap = false;
+
+    private $sConfigFile = 'config.json';
 
     public function footer()
     {
         $sContent = '';
 
-        $this->init();
+        $this->buildAssetsArray();
 
-        $sReadme = $this->sReadme;
+        $sReadme = $this->buildFooterReadme();
 
         $sContent .= <<<HTML
             </div><!-- .panel-body -->
@@ -51,12 +79,12 @@ HTML;
     {
         $sContent = '';
 
-        $this->init();
+        $this->buildAssetsArray();
 
         $sIndex = $this->buildTitle();
         $sIndexHtml = $this->buildBreadcrumbHtml();
-        $sReadmeHtml = $this->sReadmeHtml;
-        $sThumbnailHtml = $this->sThumbnailHtml;
+        $sReadmeHtml = $this->buildReadmeHtml();
+        $sThumbnailHtml = $this->buildThumbnailHtml();
 
         $sContent .= <<<HTML
 <!DOCTYPE html>
@@ -117,210 +145,6 @@ HTML;
     }
 
 
-    private $aBootswatchThemes = [
-        'Cosmo',
-        'Cyborg',
-        'Darkly',
-        'Flatly',
-        'Journal',
-        'Kingboard',
-        'Lumen',
-        'Paper',
-        'React',
-        'Readable',
-        'Sandstone',
-        'Simplex',
-        'Slate',
-        'Spacelab',
-        'Superhero',
-        'United',
-        'Yeti',
-        'Zerif',
-    ];
-
-    private $aConfig = [
-        "theme" => "default",
-        "readmePrefixes" => ["readme", "README", "ReadMe"],
-        "readmeExtensions" => [".html", ".md", ".txt"],
-        "assets" => []
-    ];
-
-    private $bUseBootstrap = false;
-
-    private $sConfigFile = 'config.json';
-
-    private function init()
-    {
-        if (is_file($this->sConfigFile)) {
-
-            $this->bUseBootstrap = true;
-
-            if (!is_readable($this->sConfigFile)) {
-                throw new \Exception("Could not read configuration file");
-            } else {
-                $this->aConfig = array_merge(
-                    $this->aConfig,
-                    json_decode(file_get_contents($this->sConfigFile), true)
-                );
-            }
-        }
-
-        if (isset($_GET['theme'])
-            && in_array(ucfirst($_GET['theme']), $this->aBootswatchThemes)
-        ) {
-            $this->bUseBootstrap = true;
-            $sThemeDir = 'vendor/bower-asset/bootswatch/' . $_GET['theme'] . '/';
-        } elseif ($this->bUseBootstrap === true
-            && is_dir($this->getRootDirectory() . '/vendor/bower-asset/bootswatch/' . $this->aConfig['theme'])
-        ) {
-            $sThemeDir = 'vendor/bower-asset/bootswatch/' . $this->aConfig['theme'] . '/';
-        } elseif (is_dir($this->getRootDirectory() . '/themes/' . $this->aConfig['theme'])) {
-            $sThemeDir = 'themes/' . $this->aConfig['theme'] . '/';
-        } else {
-            throw new \Exception('Could not find theme directory "' . $this->aConfig['theme'] . '"');
-        }
-
-        $this->aAssets = [
-            'css' => [
-                $this->getAssetPath('table.css', $sThemeDir),
-                $this->getAssetPath('thumbnails.css', $sThemeDir),
-            ],
-            'js' => [
-                'vendor/bower-asset/jquery/dist/jquery.js',
-                $this->getAssetPath('functions.js', $sThemeDir),
-            ],
-        ];
-
-        if ($this->bUseBootstrap === false || ($this->bUseBootstrap === true && $this->aConfig['theme'] !== 'default')) {
-            array_unshift(
-                $this->aAssets['css'],
-                $this->getAssetPath('bootstrap.css', $sThemeDir)
-            );
-        }
-
-        if ($this->bUseBootstrap === true) {
-            array_unshift(
-                $this->aAssets['css'],
-                'vendor/bower-asset/bootstrap/dist/css/bootstrap.min.css',
-                'vendor/bower-asset/bootstrap/dist/css/bootstrap-theme.min.css'
-            );
-        }
-
-        $this->aAssets = array_merge_recursive($this->aAssets,
-            $this->aConfig['assets']);
-
-        if (isset($_SERVER['WEB_ROOT'])) {
-            $sRoot = $_SERVER['WEB_ROOT'];
-        } elseif (is_dir($_SERVER['DOCUMENT_ROOT'])) {
-            $sRoot = $_SERVER['DOCUMENT_ROOT'];
-        } else {
-            $sRoot = dirname(dirname($_SERVER['SCRIPT_FILENAME']));
-        }
-
-        $sCurrentWebDir = $_SERVER['REQUEST_URI'];
-        $sCurrentRealDir = urldecode($sRoot . $sCurrentWebDir);
-
-        if (strpos($sCurrentRealDir, '?') !== false) {
-            $sCurrentRealDir = substr($sCurrentRealDir, 0,
-                strpos($sCurrentRealDir, '?'));
-        }#if
-
-        foreach ($this->aConfig['readmePrefixes'] as $t_sPrefix) {
-            foreach ($this->aConfig['readmeExtensions'] as $t_sExtension) {
-                $sReadMeFileName = $t_sPrefix . $t_sExtension;
-                $sReadMeFilePath = $sCurrentRealDir . urldecode($sReadMeFileName);
-
-                if (file_exists($sReadMeFilePath)) {
-                    $sReadmeContent = file_get_contents($sReadMeFilePath);
-                    if ($t_sExtension === '.md') {
-                        $converter = new CommonMarkConverter();
-                        $this->sReadmeHtml = $converter->convertToHtml($sReadmeContent);
-                    } elseif ($t_sExtension === '.txt') {
-                        $this->sReadmeHtml = '<div style="white-space: pre-wrap;">' . $sReadmeContent . '</div>';
-                    } else {
-                        $this->sReadmeHtml = $sReadmeContent;
-                    }#if
-
-                    break;
-                }#if
-            }#foreach
-        }#foreach
-
-        /* Sort out extension filter and thumbnail for images/pdf/etc. */
-        $aExtensions = array();
-        $aImages = array();
-        foreach (scandir($sCurrentRealDir) as $t_sFileName) {
-            if (!is_dir($sCurrentRealDir . $t_sFileName)
-                AND strrpos($t_sFileName, '.') !== false
-            ) {
-                $sExtension = substr($t_sFileName, strrpos($t_sFileName, '.'));
-                $sExtension = strtolower($sExtension);
-
-                $aExtensions[$sExtension] = substr($sExtension, 1);
-
-                if (in_array(
-                    $sExtension
-                    , array(
-                        '.bmp'
-                    ,
-                        '.eps'
-                    ,
-                        '.gif'
-                    ,
-                        '.ico'
-                    ,
-                        '.jpg'
-                    ,
-                        '.png'
-                    ,
-                        '.ps'
-                    ,
-                        '.pdf'
-                    ,
-                        '.psd'
-                    ,
-                        '.svg'
-                    ,
-                        '.tiff'
-                    )
-                )
-                ) {
-                    $aImages[$sCurrentWebDir . $t_sFileName] = substr($sExtension,
-                        1);
-                }#if
-            }#if
-        }#foreach
-        natcasesort($aExtensions);
-
-        if (!empty($aImages)) {
-            $this->sThumbnailHtml .= '<ul class="thumbnails polaroids">';
-            foreach ($aImages as $t_sImage => $t_sExtension) {
-                $this->sThumbnailHtml .= '<li class="' . $t_sExtension . '"><a href="' . $t_sImage . '" title="' . basename($t_sImage) . '"><img src="/Directory_Listing_Theme/thumbnail.php?file=' . urlencode($t_sImage) . '" /></a>';
-            }#foreach
-            $this->sThumbnailHtml .= '</ul>';
-        }#if
-
-        /******************************************************************************/
-        $this->sReadme = '';
-        $this->aConfig['readmeExtensions'] = array('.html', '.md', '.txt');
-        foreach ($this->aConfig['readmeExtensions'] as $t_sExtension) {
-            $sReadMeFileName = 'readme-footer' . $t_sExtension;
-            $sReadMeFilePath = urldecode($_SERVER['DOCUMENT_ROOT'] . $_SERVER['REQUEST_URI'] . $sReadMeFileName);
-
-            if (file_exists($sReadMeFilePath)) {
-                $sReadmeContent = file_get_contents($sReadMeFilePath);
-                if ($t_sExtension === '.md') {
-                    $converter = new CommonMarkConverter();
-                    $sReadmeContent = $converter->convertToHtml($sReadmeContent);
-                } elseif ($t_sExtension === '.txt') {
-                    $sReadmeContent = '<pre>' . $sReadmeContent . '</pre>';
-                }
-                $this->sReadme = '<div class="page">' . $sReadmeContent . '</div>';
-                break;
-            }#if
-        }#foreach
-    }
-
     private function getAssetPath($p_sFile, $sThemeDir)
     {
 
@@ -354,7 +178,7 @@ HTML;
         $sUrl = urldecode($_SERVER['REQUEST_URI']);
         if (strpos($sUrl, '?') !== false) {
             $sUrl = substr($sUrl, 0, strpos($sUrl, '?'));
-        }#if
+        }
 
         $sIndexHtml = '<li><a href="http://' . $_SERVER['SERVER_NAME'] . '">' . $_SERVER['SERVER_NAME'] . '</a></li>';
 
@@ -374,9 +198,9 @@ HTML;
                         $sIndexHtml .= ' class="text-muted"';
                     }
                     $sIndexHtml .= ' href="' . $sUrl . '">' . $t_sPart . '</a></li>';
-                }#if
-            }#foreach
-        }#if
+                }
+            }
+        }
 
         return $sIndexHtml;
     }
@@ -389,9 +213,223 @@ HTML;
         $sUrl = urldecode($_SERVER['REQUEST_URI']);
         if (strpos($sUrl, '?') !== false) {
             $sUrl = substr($sUrl, 0, strpos($sUrl, '?'));
-        }#if
+        }
 
         return $sUrl;
+    }
+
+    /**
+     * @throws \Exception
+     */
+    private function buildAssetsArray()
+    {
+        $this->loadConfig();
+
+        $sThemeDir = $this->fetchThemeDirectory();
+
+        $this->aAssets = [
+            'css' => [
+                $this->getAssetPath('table.css', $sThemeDir),
+                $this->getAssetPath('thumbnails.css', $sThemeDir),
+            ],
+            'js' => [
+                'vendor/bower-asset/jquery/dist/jquery.js',
+                $this->getAssetPath('functions.js', $sThemeDir),
+            ],
+        ];
+
+        if ($this->bUseBootstrap === false || ($this->bUseBootstrap === true && $this->aConfig['theme'] !== 'default')) {
+            array_unshift(
+                $this->aAssets['css'],
+                $this->getAssetPath('bootstrap.css', $sThemeDir)
+            );
+        }
+
+        if ($this->bUseBootstrap === true) {
+            array_unshift(
+                $this->aAssets['css'],
+                'vendor/bower-asset/bootstrap/dist/css/bootstrap.min.css',
+                'vendor/bower-asset/bootstrap/dist/css/bootstrap-theme.min.css'
+            );
+        }
+
+        $this->aAssets = array_merge_recursive($this->aAssets,
+            $this->aConfig['assets']);
+    }
+
+    /**
+     * @return string
+     * @throws \Exception
+     */
+    private function fetchThemeDirectory()
+    {
+        if (isset($_GET['theme'])
+            && in_array(ucfirst($_GET['theme']), $this->aBootswatchThemes)
+        ) {
+            $this->bUseBootstrap = true;
+            $sThemeDir = 'vendor/bower-asset/bootswatch/' . $_GET['theme'] . '/';
+            return $sThemeDir;
+        } elseif ($this->bUseBootstrap === true
+            && is_dir($this->getRootDirectory() . '/vendor/bower-asset/bootswatch/' . $this->aConfig['theme'])
+        ) {
+            $sThemeDir = 'vendor/bower-asset/bootswatch/' . $this->aConfig['theme'] . '/';
+            return $sThemeDir;
+        } elseif (is_dir($this->getRootDirectory() . '/themes/' . $this->aConfig['theme'])) {
+            $sThemeDir = 'themes/' . $this->aConfig['theme'] . '/';
+            return $sThemeDir;
+        } else {
+            throw new \Exception('Could not find theme directory "' . $this->aConfig['theme'] . '"');
+        }
+    }
+
+    /**
+     * @return array
+     */
+    private function getCurrentRealDirectory()
+    {
+        if (isset($_SERVER['WEB_ROOT'])) {
+            $sRoot = $_SERVER['WEB_ROOT'];
+        } elseif (is_dir($_SERVER['DOCUMENT_ROOT'])) {
+            $sRoot = $_SERVER['DOCUMENT_ROOT'];
+        } else {
+            $sRoot = dirname(dirname($_SERVER['SCRIPT_FILENAME']));
+        }
+
+        $sCurrentWebDir = $_SERVER['REQUEST_URI'];
+        $sCurrentRealDir = urldecode($sRoot . $sCurrentWebDir);
+
+        if (strpos($sCurrentRealDir, '?') !== false) {
+            $sCurrentRealDir = substr($sCurrentRealDir, 0,
+                strpos($sCurrentRealDir, '?'));
+        }
+        return $sCurrentRealDir;
+    }
+
+    /**
+     * @return array
+     */
+    private function buildReadmeHtml()
+    {
+        $sReadmeHtml = '';
+
+        $sCurrentRealDir = $this->getCurrentRealDirectory();
+
+        foreach ($this->aConfig['readmePrefixes'] as $t_sPrefix) {
+            foreach ($this->aConfig['readmeExtensions'] as $t_sExtension) {
+                $sReadMeFileName = $t_sPrefix . $t_sExtension;
+                $sReadMeFilePath = $sCurrentRealDir . urldecode($sReadMeFileName);
+
+                if (file_exists($sReadMeFilePath)) {
+                    $sReadmeContent = file_get_contents($sReadMeFilePath);
+                    if ($t_sExtension === '.md') {
+                        $converter = new CommonMarkConverter();
+                        $sReadmeHtml = $converter->convertToHtml($sReadmeContent);
+                    } elseif ($t_sExtension === '.txt') {
+                        $sReadmeHtml = '<div style="white-space: pre-wrap;">' . $sReadmeContent . '</div>';
+                    } else {
+                        $sReadmeHtml = $sReadmeContent;
+                    }
+
+                    break;
+                }
+            }
+        }
+
+        return $sReadmeHtml;
+    }
+
+    /**
+     * @return mixed
+     */
+    private function buildThumbnailHtml()
+    {
+        $sThumbnailHtml = '';
+
+        /* Sort out extension filter and thumbnail for images/pdf/etc. */
+        $aExtensions = array();
+        $aImages = array();
+        $sCurrentRealDir = $this->getCurrentRealDirectory();
+        $sCurrentWebDir = $_SERVER['REQUEST_URI'];
+
+        foreach (scandir($sCurrentRealDir) as $t_sFileName) {
+            if (!is_dir($sCurrentRealDir . $t_sFileName)
+                AND strrpos($t_sFileName, '.') !== false
+            ) {
+                $sExtension = substr($t_sFileName, strrpos($t_sFileName, '.'));
+                $sExtension = strtolower($sExtension);
+
+                $aExtensions[$sExtension] = substr($sExtension, 1);
+
+                $aSupportedExtensions = [
+                    '.bmp',
+                    '.eps',
+                    '.gif',
+                    '.ico',
+                    '.jpg',
+                    '.png',
+                    '.ps',
+                    '.pdf',
+                    '.psd',
+                    '.svg',
+                    '.tiff',
+                ];
+                if (in_array($sExtension, $aSupportedExtensions)) {
+                    $aImages[$sCurrentWebDir . $t_sFileName] = substr($sExtension, 1);
+                }
+            }
+        }
+
+        natcasesort($aExtensions);
+
+        if (!empty($aImages)) {
+            $sThumbnailHtml .= '<ul class="thumbnails polaroids">';
+            foreach ($aImages as $t_sImage => $t_sExtension) {
+                $sThumbnailHtml .= '<li class="' . $t_sExtension . '"><a href="' . $t_sImage . '" title="' . basename($t_sImage) . '"><img src="/Directory_Listing_Theme/thumbnail.php?file=' . urlencode($t_sImage) . '" /></a>';
+            }
+            $sThumbnailHtml .= '</ul>';
+        }
+        return $sThumbnailHtml;
+    }
+
+    private function loadConfig()
+    {
+        if (is_file($this->sConfigFile)) {
+
+            $this->bUseBootstrap = true;
+
+            if (!is_readable($this->sConfigFile)) {
+                throw new \Exception("Could not read configuration file");
+            } else {
+                $this->aConfig = array_merge(
+                    $this->aConfig,
+                    json_decode(file_get_contents($this->sConfigFile), true)
+                );
+            }
+        }
+    }
+
+    private function buildFooterReadme()
+    {
+        $sReadme = '';
+        $this->aConfig['readmeExtensions'] = array('.html', '.md', '.txt');
+        foreach ($this->aConfig['readmeExtensions'] as $t_sExtension) {
+            $sReadMeFileName = 'readme-footer' . $t_sExtension;
+            $sReadMeFilePath = urldecode($_SERVER['DOCUMENT_ROOT'] . $_SERVER['REQUEST_URI'] . $sReadMeFileName);
+
+            if (file_exists($sReadMeFilePath)) {
+                $sReadmeContent = file_get_contents($sReadMeFilePath);
+                if ($t_sExtension === '.md') {
+                    $converter = new CommonMarkConverter();
+                    $sReadmeContent = $converter->convertToHtml($sReadmeContent);
+                } elseif ($t_sExtension === '.txt') {
+                    $sReadmeContent = '<pre>' . $sReadmeContent . '</pre>';
+                }
+                $sReadme = '<div class="page">' . $sReadmeContent . '</div>';
+                break;
+            }
+        }
+
+        return $sReadme;
     }
 
 }
