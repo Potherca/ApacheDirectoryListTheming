@@ -407,11 +407,8 @@ HTML;
                 $sReadMeFileName = $t_sPrefix . $t_sExtension;
                 $sReadMeFilePath = $sCurrentRealDir . urldecode($sReadMeFileName);
 
-                $sReadmeHtml = $this->buildReadmeHtml($sReadMeFilePath, $t_sExtension);
+                $sReadmeHtml .= $this->buildReadmeHtml($sReadMeFilePath, $t_sExtension);
 
-                if (!empty($sReadmeHtml)) {
-                    break;
-                }
             }
         }
 
@@ -434,7 +431,6 @@ HTML;
                 $sReadmeHtml .= $converter->convertToHtml($sReadmeContent);
             } elseif ($t_sExtension === '.txt') {
                 $sReadmeHtml .= '<div style="white-space: pre-wrap;">' . $sReadmeContent . '</div>';
-                return $sReadmeHtml;
             } else {
                 $sReadmeHtml .= $sReadmeContent;
             }
