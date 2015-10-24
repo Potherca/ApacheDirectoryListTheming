@@ -6,6 +6,7 @@ use League\CommonMark\CommonMarkConverter;
 
 class DirectoryListing
 {
+    private $aEnvironment = [];
 
     private $aAssets = ['css' => [], 'js' => []];
 
@@ -41,7 +42,12 @@ class DirectoryListing
 
     private $sConfigFile = 'config.json';
 
-    public function footer()
+    final public function  __construct(array $aEnvironment)
+    {
+        $this->aEnvironment = $aEnvironment;
+    }
+
+    final public function footer()
     {
         $sContent = '';
 
@@ -75,15 +81,15 @@ HTML;
         return $sContent;
     }
 
-    public function header()
+    final public function header()
     {
         $sContent = '';
 
         $this->buildAssetsArray();
 
-        $sIndex = $this->buildTitle();
+        $sUrl = $this->getUrl();
         $sIndexHtml = $this->buildBreadcrumbHtml();
-        $sReadmeHtml = $this->buildReadmeHtml();
+        $sReadmeHtml = $this->buildHeaderReadme();
         $sThumbnailHtml = $this->buildThumbnailHtml();
 
         $sContent .= <<<HTML
@@ -91,7 +97,7 @@ HTML;
 <html>
 <head>
     <meta charset="utf-8" />
-    <title>Index of ${sIndex}</title>
+    <title>Index of ${sUrl}</title>
 HTML;
         foreach ($this->aAssets['css'] as $sStylesheet) {
             $sContent .= <<<HTML
@@ -144,7 +150,6 @@ HTML;
         return $sContent;
     }
 
-
     private function getAssetPath($p_sFile, $sThemeDir)
     {
 
@@ -174,18 +179,14 @@ HTML;
      */
     private function buildBreadcrumbHtml()
     {
-        /* Set Title */
-        $sUrl = urldecode($_SERVER['REQUEST_URI']);
-        if (strpos($sUrl, '?') !== false) {
-            $sUrl = substr($sUrl, 0, strpos($sUrl, '?'));
-        }
+        $sUrl = $this->getUrl();
 
-        $sIndexHtml = '<li><a href="http://' . $_SERVER['SERVER_NAME'] . '">' . $_SERVER['SERVER_NAME'] . '</a></li>';
+        $sIndexHtml = '<li><a href="http://' . $this->aEnvironment['SERVER_NAME'] . '">' . $this->aEnvironment['SERVER_NAME'] . '</a></li>';
 
-        if ($_SERVER['REQUEST_URI'] !== '/') {
+        if ($this->aEnvironment['REQUEST_URI'] !== '/') {
             $aParts = explode('/', trim($sUrl, '/'));
             $iCount = count($aParts) - 1;
-            $sUrl = 'http://' . $_SERVER['SERVER_NAME'];
+            $sUrl = 'http://' . $this->aEnvironment['SERVER_NAME'];
 
             foreach ($aParts as $t_iIndex => $t_sPart) {
                 if (!empty($t_sPart)) {
@@ -208,9 +209,9 @@ HTML;
     /**
      * @return string
      */
-    private function buildTitle()
+    private function getUrl()
     {
-        $sUrl = urldecode($_SERVER['REQUEST_URI']);
+        $sUrl = urldecode($this->aEnvironment['REQUEST_URI']);
         if (strpos($sUrl, '?') !== false) {
             $sUrl = substr($sUrl, 0, strpos($sUrl, '?'));
         }
@@ -287,15 +288,15 @@ HTML;
      */
     private function getCurrentRealDirectory()
     {
-        if (isset($_SERVER['WEB_ROOT'])) {
-            $sRoot = $_SERVER['WEB_ROOT'];
-        } elseif (is_dir($_SERVER['DOCUMENT_ROOT'])) {
-            $sRoot = $_SERVER['DOCUMENT_ROOT'];
+        if (isset($this->aEnvironment['WEB_ROOT'])) {
+            $sRoot = $this->aEnvironment['WEB_ROOT'];
+        } elseif (is_dir($this->aEnvironment['DOCUMENT_ROOT'])) {
+            $sRoot = $this->aEnvironment['DOCUMENT_ROOT'];
         } else {
-            $sRoot = dirname(dirname($_SERVER['SCRIPT_FILENAME']));
+            $sRoot = dirname(dirname($this->aEnvironment['SCRIPT_FILENAME']));
         }
 
-        $sCurrentWebDir = $_SERVER['REQUEST_URI'];
+        $sCurrentWebDir = $this->aEnvironment['REQUEST_URI'];
         $sCurrentRealDir = urldecode($sRoot . $sCurrentWebDir);
 
         if (strpos($sCurrentRealDir, '?') !== false) {
@@ -306,40 +307,7 @@ HTML;
     }
 
     /**
-     * @return array
-     */
-    private function buildReadmeHtml()
-    {
-        $sReadmeHtml = '';
-
-        $sCurrentRealDir = $this->getCurrentRealDirectory();
-
-        foreach ($this->aConfig['readmePrefixes'] as $t_sPrefix) {
-            foreach ($this->aConfig['readmeExtensions'] as $t_sExtension) {
-                $sReadMeFileName = $t_sPrefix . $t_sExtension;
-                $sReadMeFilePath = $sCurrentRealDir . urldecode($sReadMeFileName);
-
-                if (file_exists($sReadMeFilePath)) {
-                    $sReadmeContent = file_get_contents($sReadMeFilePath);
-                    if ($t_sExtension === '.md') {
-                        $converter = new CommonMarkConverter();
-                        $sReadmeHtml = $converter->convertToHtml($sReadmeContent);
-                    } elseif ($t_sExtension === '.txt') {
-                        $sReadmeHtml = '<div style="white-space: pre-wrap;">' . $sReadmeContent . '</div>';
-                    } else {
-                        $sReadmeHtml = $sReadmeContent;
-                    }
-
-                    break;
-                }
-            }
-        }
-
-        return $sReadmeHtml;
-    }
-
-    /**
-     * @return mixed
+     * @return string
      */
     private function buildThumbnailHtml()
     {
@@ -349,7 +317,7 @@ HTML;
         $aExtensions = array();
         $aImages = array();
         $sCurrentRealDir = $this->getCurrentRealDirectory();
-        $sCurrentWebDir = $_SERVER['REQUEST_URI'];
+        $sCurrentWebDir = $this->aEnvironment['REQUEST_URI'];
 
         foreach (scandir($sCurrentRealDir) as $t_sFileName) {
             if (!is_dir($sCurrentRealDir . $t_sFileName)
@@ -411,20 +379,13 @@ HTML;
     private function buildFooterReadme()
     {
         $sReadme = '';
-        $this->aConfig['readmeExtensions'] = array('.html', '.md', '.txt');
         foreach ($this->aConfig['readmeExtensions'] as $t_sExtension) {
             $sReadMeFileName = 'readme-footer' . $t_sExtension;
-            $sReadMeFilePath = urldecode($_SERVER['DOCUMENT_ROOT'] . $_SERVER['REQUEST_URI'] . $sReadMeFileName);
+            $sReadMeFilePath = urldecode($this->aEnvironment['DOCUMENT_ROOT'] . $this->aEnvironment['REQUEST_URI'] . $sReadMeFileName);
 
-            if (file_exists($sReadMeFilePath)) {
-                $sReadmeContent = file_get_contents($sReadMeFilePath);
-                if ($t_sExtension === '.md') {
-                    $converter = new CommonMarkConverter();
-                    $sReadmeContent = $converter->convertToHtml($sReadmeContent);
-                } elseif ($t_sExtension === '.txt') {
-                    $sReadmeContent = '<pre>' . $sReadmeContent . '</pre>';
-                }
-                $sReadme = '<div class="page">' . $sReadmeContent . '</div>';
+            $sReadmeHtml = $this->buildReadmeHtml($sReadMeFilePath, $t_sExtension);
+
+            if (!empty($sReadmeHtml)) {
                 break;
             }
         }
@@ -432,5 +393,50 @@ HTML;
         return $sReadme;
     }
 
+    /**
+     * @return array
+     */
+    private function buildHeaderReadme()
+    {
+        $sReadmeHtml = '';
+
+        $sCurrentRealDir = $this->getCurrentRealDirectory();
+
+        foreach ($this->aConfig['readmePrefixes'] as $t_sPrefix) {
+            foreach ($this->aConfig['readmeExtensions'] as $t_sExtension) {
+                $sReadMeFileName = $t_sPrefix . $t_sExtension;
+                $sReadMeFilePath = $sCurrentRealDir . urldecode($sReadMeFileName);
+
+                $sReadmeHtml .= $this->buildReadmeHtml($sReadMeFilePath, $t_sExtension);
+
+            }
+        }
+
+        return $sReadmeHtml;
+    }
+
+    /**
+     * @param $sReadMeFilePath
+     * @param $t_sExtension
+     * @return string
+     */
+    private function buildReadmeHtml($sReadMeFilePath, $t_sExtension)
+    {
+        $sReadmeHtml = '';
+
+        if (file_exists($sReadMeFilePath)) {
+            $sReadmeContent = file_get_contents($sReadMeFilePath);
+            if ($t_sExtension === '.md') {
+                $converter = new CommonMarkConverter();
+                $sReadmeHtml .= $converter->convertToHtml($sReadmeContent);
+            } elseif ($t_sExtension === '.txt') {
+                $sReadmeHtml .= '<div style="white-space: pre-wrap;">' . $sReadmeContent . '</div>';
+            } else {
+                $sReadmeHtml .= $sReadmeContent;
+            }
+
+        }
+        return $sReadmeHtml;
+    }
 }
 /*EOF*/
