@@ -18,10 +18,9 @@ This project provides an easy way of achieving this.
 
 ## What it looks like
 
-Below is a screenshot of what the decorated result looks like. The screenshot 
-was taken at a 1280x800 resolution.
+Below is a screenshot of what the decorated result looks like.
 
-![screenshot](screenshot-01.png "Screenshot")
+![screenshot](screenshot-02.png "Screenshot")
 
 ## Installation
 
