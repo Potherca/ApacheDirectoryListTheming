@@ -1,5 +1,14 @@
 # Apache Directory List Theming
 
+[![Waffle Icon]][Waffle Page]
+[![License Badge]][License Page]
+[![Version Badge]][Version Page]
+[![Project Stage Badge - Development]][Project Stage Page]
+[![Maintained Badge]][Maintained Page]
+[![Scrutinizer Badge]][Scrutinizer Page]
+[![Codacy Badge]][Codacy Page]
+[![Insight Badge]][Insight Page]
+
 ## Introduction
 
 Using basic PHP, HTML and CSS and the Apache Module [mod_autoindex], we can 
@@ -9,10 +18,9 @@ This project provides an easy way of achieving this.
 
 ## What it looks like
 
-Below is a screenshot of what the decorated result looks like. The screenshot 
-was taken at a 1280x800 resolution.
+Below is a screenshot of what the decorated result looks like.
 
-![screenshot](screenshot-01.png "Screenshot")
+![screenshot](screenshot-02.png "Screenshot")
 
 ## Installation
 
@@ -99,5 +107,24 @@ config file for a given directory.
 
 
 [mod_autoindex]: http://httpd.apache.org/docs/current/mod/mod_autoindex.html
+
+[Codacy Badge]: https://img.shields.io/codacy/b68a50d02c804cad85f12c4feae37e7d.svg
+[Codacy Page]: https://www.codacy.com/app/potherca_2612/ApacheDirectoryListTheming/
+[Insight Badge]: https://img.shields.io/sensiolabs/i/a35e80d9-bf21-4afe-a4b2-127a73c5368a.svg
+[Insight Page]: https://insight.sensiolabs.com/projects/a35e80d9-bf21-4afe-a4b2-127a73c5368a
+[License Badge]: https://img.shields.io/badge/License-GPL3%2B-blue.svg
+[License Page]: LICENSE
+[Maintained Badge]: https://stillmaintained.com/potherca/ApacheDirectoryListTheming.svg
+[Maintained Page]: https://stillmaintained.com/potherca/ApacheDirectoryListTheming
+[Project Stage Badge - Development]: http://img.shields.io/badge/Project%20Stage-Development-yellowgreen.svg
+[Project Stage Badge - Production]: http://img.shields.io/badge/Project%20Stage-Production%20Ready-brightgreen.svg
+[Project Stage Page]: http://bl.ocks.org/potherca/raw/a2ae67caa3863a299ba0/
+[Scrutinizer Badge]: https://img.shields.io/scrutinizer/g/potherca/ApacheDirectoryListTheming.svg
+[Scrutinizer Page]: https://scrutinizer-ci.com/g/potherca/ApacheDirectoryListTheming/
+[Version Badge]: http://img.shields.io/github/tag/potherca/ApacheDirectoryListTheming.svg
+[Version Page]: https://github.com/potherca/ApacheDirectoryListTheming/releases 
+[Waffle Icon]: https://waffle.io/favicon.ico
+[Waffle Page]: https://waffle.io/Potherca/ApacheDirectoryListTheming/
+
 
 <!-- EOF -->

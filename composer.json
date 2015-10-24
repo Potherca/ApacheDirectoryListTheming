@@ -9,11 +9,12 @@
         }
     ],
     "require": {
-        "fxp/composer-asset-plugin": "^1.0",
+        "fxp/composer-asset-plugin": "^1.1",
         "bower-asset/bootstrap": "^3.3",
-        "bower-asset/fuelux": "^3.7",
+        "bower-asset/fuelux": "^3.11",
         "bower-asset/bootswatch": "^3.3",
-        "league/commonmark": "^0.8.0"
+        "intervention/image": "^2.3",
+        "league/commonmark": "^0.11.0"
     },
     "autoload": {
         "psr-4": {
