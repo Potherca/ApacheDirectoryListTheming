@@ -110,7 +110,7 @@ config file for a given directory.
 [mod_autoindex]: http://httpd.apache.org/docs/current/mod/mod_autoindex.html
 
 [Codacy Badge]: https://img.shields.io/codacy/b68a50d02c804cad85f12c4feae37e7d.svg
-[Codacy Page]: https://www.codacy.com/app/potherca_2612/ApacheDirectoryListTheming/
+[Codacy Page]: https://www.codacy.com/app/potherca/ApacheDirectoryListTheming
 [Dependency Badge]: https://www.versioneye.com/user/projects/562c983036d0ab00210012b7/badge.svg
 [Dependency Page]: https://www.versioneye.com/user/projects/562c983036d0ab00210012b7
 [Insight Badge]: https://img.shields.io/sensiolabs/i/a35e80d9-bf21-4afe-a4b2-127a73c5368a.svg
