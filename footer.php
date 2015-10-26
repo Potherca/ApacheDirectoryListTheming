@@ -2,10 +2,8 @@
 
 namespace Potherca\Apache\Modules\AutoIndex;
 
-require 'vendor/autoload.php';
+include 'bootstrap.php';
 
-$directoryListing = new DirectoryListing($_SERVER);
-
-echo $directoryListing->footer();
+echo run('footer');
 
 /*EOF*/

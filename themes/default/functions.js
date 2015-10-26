@@ -1,6 +1,5 @@
 (function($) {
-    var keys, $titles, cache, listSelector = 'tbody td a';
-    var $element = $('#filter');
+    var $Table;
 
     String.prototype.removeDiacritics = function removeDiacritics() {
         var diacriticsMap = {
@@ -99,35 +98,35 @@
         return subject;
     };
 
-    function addFilter() {
+    function addFilter(p_$Filter, p_$Titles) {
+        var aKeys, oCache;
+
        // The list with keys to skip (esc, arrows, return, etc)
        // 8 is backspace, removed for better usability
-       keys = [13, 27, 32, 37, 38, 39, 40 /*,8*/ ];
-       $titles = $(listSelector);
-       cache = {};
+       aKeys = [13, 27, 32, 37, 38, 39, 40 /*,8*/ ];
+       oCache = {};
 
-       if ($titles.length !== 0) {
+       if (p_$Titles.length !== 0) {
 
-           $titles.each(function(index, node) {
+           p_$Titles.each(function(index, node) {
                 var $node = $(node),
                     text = $node.text().removeDiacritics().toLowerCase()
                ;
 
-               if (typeof cache[text] !== 'undefined') {
+               if (typeof oCache[text] !== 'undefined') {
                    // Another item with exactly the same text already exists
-                   cache[text] = cache[text].add($node.parents('tr'));
+                   oCache[text] = oCache[text].add($node.parents('tr'));
                } else {
-                   cache[text] = $node.parents('tr');
+                   oCache[text] = $node.parents('tr');
                }
            });
 
-           $element.keyup(function(e) {
-                if ($.inArray(e.keyCode, keys) === -1) {
-                    var val = $element.val().removeDiacritics().toLowerCase();
+           p_$Filter.keyup(function(e) {
+                if ($.inArray(e.keyCode, aKeys) === -1) {
+                    var sValue = p_$Filter.val().removeDiacritics().toLowerCase();
 
-                    /*@TODO: Also show/hide image preview thumbnails */
-                    $.each(cache, function(text, $node) {
-                       if((text + '').indexOf(val) === -1) {
+                    $.each(oCache, function(text, $node) {
+                       if((text + '').indexOf(sValue) === -1) {
                            $node.hide();
                        } else {
                            $node.show();
@@ -138,7 +137,58 @@
        }
    }
 
-   addFilter();
+    /**
+     * @param p_sFileName
+     * @returns string
+     * @see http://stackoverflow.com/a/12900504/153049
+     */
+    function getFileExtension(p_sFileName) {
+        return p_sFileName.slice((p_sFileName.lastIndexOf(".") - 1 >>> 0) + 2);
+    }
+
+    function addPreviews(p_$Table) {
+        /*
+         To display an image/video directly beneath the link, the positioning
+         should be adding an extra row underneath rows that need is.
+
+         This means that this logic is dependant on configuration, thus should be
+         called from the main template.
+         */
+        p_$Table.find('tr').each(function (p_iIndex, p_oRowElement) {
+                var sFileExtension, sFileName, $Companion, $MainElement, $Row;
+
+                $Row = $(p_oRowElement);
+                sFileName = $Row.find('td:nth-child(2) a').text()
+                $Companion = $('.preview-list').find('[data-name="' + sFileName + '"]');
+
+                if (p_iIndex === 0) {
+                    $MainElement = $('<th class="preview">Preview</th>');
+                } else {
+                    $MainElement = $('<td class="preview"></td>');
+                }
+                $Row.append($MainElement);
+
+                if ($Companion.length > 0) {
+                    /* @CHECKME: Add special handling for certain MIME types?
+                    sFileExtension = getFileExtension(sFileName);
+                    switch (sFileExtension) {
+                        case '':
+                        default:
+                            // ?
+                        break;
+                    }*/
+                    $MainElement.append($Companion.html());
+                }
+            })
+        ;
+    }
+
+    $Table = $('.main-content').find('table');
+
+    $Table.addClass('table table-condensed table-hover');
+    addFilter($('#filter'), $('tbody td a'));
+    addPreviews($Table);
+
 }(jQuery));
 
 /*EOF*/
