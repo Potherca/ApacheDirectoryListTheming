@@ -12,7 +12,7 @@
 
 ## Introduction
 
-Using basic PHP, HTML and CSS and the Apache Module [mod_autoindex], we can 
+Using basic PHP, HTML and CSS and the Apache Module [mod_autoindex], one can 
 create a nicer looking directory listing. 
 
 This project provides an easy way of achieving this. 
@@ -21,7 +21,82 @@ This project provides an easy way of achieving this.
 
 Below is a screenshot of what the decorated result looks like.
 
+### Old-fashioned Firefox Directory Listing Theme
+
+![screenshot](screenshot-01.png "Screenshot")
+
+### Bootstrap / Bootswatch Theme
+
 ![screenshot](screenshot-02.png "Screenshot")
+
+## Theming
+
+Instead of only having the old default style, there are 16 other styles to pick 
+from, based on [Bootstrap] and [Bootswatch].
+
+Besides the "default" theme, the following themes from Bootswatch are available:
+
+ - Cerulean
+ - Cosmo
+ - Cyborg
+ - Darkly
+ - Flatly
+ - Journal
+ - Lumen
+ - Paper
+ - Readable
+ - Sandstone
+ - Simplex
+ - Slate
+ - Spacelab
+ - Superhero
+ - United
+ - Yeti
+
+Please visit [Bootswatch](https://bootswatch.com/) for preview of each themes 
+color scheme.
+
+### Theme Configuration 
+
+To activate the new theme, add a file called `config.json` with the following 
+content to the root directory:
+
+    {
+        "theme" : "default"
+    }
+
+To use a different theme, simply replace `default` with the name of the theme 
+that should be used.
+
+For instance to use the _Superhero_ theme, change the contents of `config.json` 
+to look like this:
+
+    {
+        "theme" : "superhero"
+    }
+
+To try out a different theme before committing to it in the `config.json`, 
+simply append `?theme=superhero` to any URL to get a preview of that theme.
+
+### Theme Customisation
+
+To add more/other styling and/or functionality to a theme, add an `assets` 
+section to the configuration. Separate sections are used for CSS and JS assets.
+
+    {
+        "theme" : "default",
+        "assets" : {
+            "css" : [
+                "path/to/custom/theme-styling.css"
+            ]
+            "js" : [
+                "path/to/custom/theme-functionality.js"
+            ]
+        }
+    }
+
+If you feel you have created something you would like to share, feel free to 
+open a pull request to have it included in this project.
 
 ## Installation
 
@@ -84,7 +159,7 @@ changed by setting a variable called `THUMBNAIL_DIRECTORY` to where you would
 rather have the generated thumbnails be stored. You can do this by adding the 
 following line to your Apache Config file:
 
-    	SetEnv THUMBNAIL_DIRECTORY /path/to/your/.thumbs/
+        SetEnv THUMBNAIL_DIRECTORY /path/to/your/.thumbs/
 
 ## How it works
 
@@ -106,8 +181,9 @@ a symlink, linking to the version currently checked out of the repository. Also,
 instead of having to add all those directives to each user, we simply include a 
 config file for a given directory.
 
-
 [mod_autoindex]: http://httpd.apache.org/docs/current/mod/mod_autoindex.html
+[Bootstrap]: https://bootswatch.com/
+[BootSwatch]: http://getbootstrap.com/
 
 [Codacy Badge]: https://img.shields.io/codacy/b68a50d02c804cad85f12c4feae37e7d.svg
 [Codacy Page]: https://www.codacy.com/app/potherca/ApacheDirectoryListTheming
