@@ -2,13 +2,8 @@
 
 namespace Potherca\Apache\Modules\AutoIndex;
 
-use PHPTAL;
+include 'bootstrap.php';
 
-require 'vendor/autoload.php';
-
-$directoryListing = new DirectoryListing($_SERVER);
-$template = new Template(new PHPTAL('src/template.html'));
-
-echo $directoryListing->header($template);
+echo run('header');
 
 /*EOF*/
