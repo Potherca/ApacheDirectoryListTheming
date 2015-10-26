@@ -4,13 +4,19 @@ namespace Potherca\Apache\Modules\AutoIndex;
 
 use League\CommonMark\CommonMarkConverter;
 
+/**
+ * Note: The variable naming scheme used in this code is an adaption of
+ * Systems Hungarian which is explained at http://pother.ca/VariableNamingConvention/
+ */
 class DirectoryListing
 {
     ////////////////////////////// CLASS PROPERTIES \\\\\\\\\\\\\\\\\\\\\\\\\\\\
-    private $aEnvironment = [];
+    const DIRECTORY_NAME = 'Directory_Listing_Theme';
+
+    private $m_aEnvironment = [];
 
     // @FIXME: Instead of a hard-coded list of themes, the contents of ./vendor/bower-asset/bootswatch should be used
-    private $aBootswatchThemes = [
+    private $m_aBootswatchThemes = [
         'Cerulean',
         'Cosmo',
         'Cyborg',
@@ -31,7 +37,7 @@ class DirectoryListing
         'Foo',
     ];
 
-    private $aConfig = [
+    private $m_aConfig = [
         "theme" => "default",
         "readmePrefixes" => ["readme", "README", "ReadMe"],
         "readmeExtensions" => [".html", ".md", ".txt"],
@@ -41,11 +47,11 @@ class DirectoryListing
     /**
      * @var array
      */
-    private $aUserInput = [];
+    private $m_aUserInput = [];
 
-    private $bUseBootstrap = false;
+    private $m_bUseBootstrap = false;
 
-    private $sConfigFile = 'config.json';
+    private $m_sConfigFile = 'config.json';
 
     //////////////////////////// SETTERS AND GETTERS \\\\\\\\\\\\\\\\\\\\\\\\\\\
     /**
@@ -57,15 +63,15 @@ class DirectoryListing
 
         if ($sCurrentRealDir === null) {
 
-            if (isset($this->aEnvironment['WEB_ROOT'])) {
-                $sRoot = $this->aEnvironment['WEB_ROOT'];
-            } elseif (is_dir($this->aEnvironment['DOCUMENT_ROOT'])) {
-                $sRoot = $this->aEnvironment['DOCUMENT_ROOT'];
+            if (isset($this->m_aEnvironment['WEB_ROOT'])) {
+                $sRoot = $this->m_aEnvironment['WEB_ROOT'];
+            } elseif (is_dir($this->m_aEnvironment['DOCUMENT_ROOT'])) {
+                $sRoot = $this->m_aEnvironment['DOCUMENT_ROOT'];
             } else {
-                $sRoot = dirname(dirname($this->aEnvironment['SCRIPT_FILENAME']));
+                $sRoot = dirname(dirname($this->m_aEnvironment['SCRIPT_FILENAME']));
             }
 
-            $sCurrentWebDir = $this->aEnvironment['REQUEST_URI'];
+            $sCurrentWebDir = $this->m_aEnvironment['REQUEST_URI'];
             $sCurrentRealDir = $this->sanitizeUrl($sRoot . $sCurrentWebDir);
         }
 
@@ -85,83 +91,83 @@ class DirectoryListing
         static $sUrl;
 
         if ($sUrl === null) {
-            $sUrl = $this->sanitizeUrl($this->aEnvironment['REQUEST_URI']);
+            $sUrl = $this->sanitizeUrl($this->m_aEnvironment['REQUEST_URI']);
         }
 
         return $sUrl;
     }
 
     //////////////////////////////// PUBLIC API \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-    final public function  __construct(array $aEnvironment, array $aUserInput)
+    final public function  __construct(array $p_aEnvironment, array $p_aUserInput)
     {
-        $this->aEnvironment = $aEnvironment;
-        $this->aUserInput = $aUserInput;
+        $this->m_aEnvironment = $p_aEnvironment;
+        $this->m_aUserInput = $p_aUserInput;
     }
 
-    final public function footer(TemplateInterface $template)
+    final public function footer(TemplateInterface $p_oTemplate)
     {
         $aConfig = $this->loadConfig();
 
-        $context = [];
-        $context['aJsAssets'] = $this->buildJavascriptAssets($aConfig);
-        $context['aPreviews'] = $this->buildPreviews();
-        $context['sFooterReadme'] = $this->buildFooterReadme($aConfig);
-        $context['sSignature'] = $this->aEnvironment['SERVER_SIGNATURE'];
+        $aContext = [];
+        $aContext['aJsAssets'] = $this->buildJavascriptAssets($aConfig);
+        $aContext['aPreviews'] = $this->buildPreviews();
+        $aContext['sFooterReadme'] = $this->buildFooterReadme($aConfig);
+        $aContext['sSignature'] = $this->m_aEnvironment['SERVER_SIGNATURE'];
 
-        return $template->buildBottom($context);
+        return $p_oTemplate->buildBottom($aContext);
     }
 
-    final public function header(TemplateInterface $template)
+    final public function header(TemplateInterface $p_oTemplate)
     {
         $aConfig = $this->loadConfig();
 
-        $context = [];
-        $context['aCssAssets'] = $this->buildCssAssets($aConfig);
-        $context['sIndex'] = 'Index of ' . $this->getUrl();
-        $context['sIndexHtml'] = $this->buildBreadcrumbHtml();
-        $context['sReadmeHtml'] = $this->buildHeaderReadme($aConfig);
+        $aContext = [];
+        $aContext['aCssAssets'] = $this->buildCssAssets($aConfig);
+        $aContext['sIndex'] = 'Index of ' . $this->getUrl();
+        $aContext['sIndexHtml'] = $this->buildBreadcrumbHtml();
+        $aContext['sReadmeHtml'] = $this->buildHeaderReadme($aConfig);
 
-        return $template->buildTop($context);
+        return $p_oTemplate->buildTop($aContext);
     }
 
     ////////////////////////////// UTILITY METHODS \\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-    private function getAssetPath($p_sFile, $sThemeDir)
+    private function getAssetPath($p_sFile, $p_sThemeDir)
     {
 
         $aParts = explode('.', $p_sFile);
         array_splice($aParts, -1, 0, array('min'));
 
-        if (is_file($this->getRootDirectory() . '/' . $sThemeDir . $p_sFile)) {
-            $sPath = $sThemeDir . $p_sFile;
-        } elseif (is_file($this->getRootDirectory() . '/' . $sThemeDir . implode('.', $aParts))) {
-            $sPath = $sThemeDir . implode('.', $aParts);
+        if (is_file($this->getRootDirectory() . '/' . $p_sThemeDir . $p_sFile)) {
+            $sPath = $p_sThemeDir . $p_sFile;
+        } elseif (is_file($this->getRootDirectory() . '/' . $p_sThemeDir . implode('.', $aParts))) {
+            $sPath = $p_sThemeDir . implode('.', $aParts);
         } elseif (is_file($this->getRootDirectory() . '/' . '/themes/default/' . $p_sFile)) {
             $sPath = '/themes/default/' . $p_sFile;
         } else {
             throw new \Exception('Could not find asset "' . $p_sFile . '"');
         }
 
-        return '/Directory_Listing_Theme/'. $sPath;
+        return '/' . self::DIRECTORY_NAME . '/' . $sPath;
     }
 
     /**
+     * @TODO: Move breadcrumb HTML to template
+     *
      * @return string
      */
     private function buildBreadcrumbHtml()
     {
+        $sIndexHtml = sprintf(
+            '<li><a href="http://%1$s">%1$s</a></li>',
+            $this->m_aEnvironment['SERVER_NAME']
+        );
+
         $sUrl = $this->getUrl();
 
-        $sIndexHtml = '<li>'
-            . '<a href="http://' . $this->aEnvironment['SERVER_NAME'] . '">'
-            . $this->aEnvironment['SERVER_NAME']
-            . '</a>'
-            . '</li>'
-        ;
-
-        if ($this->aEnvironment['REQUEST_URI'] !== '/') {
+        if ($this->m_aEnvironment['REQUEST_URI'] !== '/') {
             $aParts = explode('/', trim($sUrl, '/'));
             $iCount = count($aParts) - 1;
-            $sUrl = 'http://' . $this->aEnvironment['SERVER_NAME'];
+            $sUrl = 'http://' . $this->m_aEnvironment['SERVER_NAME'];
 
             foreach ($aParts as $t_iIndex => $t_sPart) {
                 if (!empty($t_sPart)) {
@@ -182,27 +188,27 @@ class DirectoryListing
     }
 
     /**
-     * @param array $aConfig
+     * @param array $p_aConfig
      *
      * @return string
      *
      * @throws \Exception
      */
-    private function fetchThemeDirectory($aConfig)
+    private function fetchThemeDirectory($p_aConfig)
     {
-        if (isset($this->aUserInput['theme'])
-            && in_array(ucfirst($this->aUserInput['theme']), $this->aBootswatchThemes)
+        if (isset($this->m_aUserInput['theme'])
+            && in_array(ucfirst($this->m_aUserInput['theme']), $this->m_aBootswatchThemes)
         ) {
-            $this->bUseBootstrap = true;
-            $sThemeDir = 'vendor/bower-asset/bootswatch/' . $this->aUserInput['theme'] . '/';
-        } elseif ($this->bUseBootstrap === true
-            && is_dir($this->getRootDirectory() . '/vendor/bower-asset/bootswatch/' . $aConfig['theme'])
+            $this->m_bUseBootstrap = true;
+            $sThemeDir = 'vendor/bower-asset/bootswatch/' . $this->m_aUserInput['theme'] . '/';
+        } elseif ($this->m_bUseBootstrap === true
+            && is_dir($this->getRootDirectory() . '/vendor/bower-asset/bootswatch/' . $p_aConfig['theme'])
         ) {
-            $sThemeDir = 'vendor/bower-asset/bootswatch/' . $aConfig['theme'] . '/';
-        } elseif (is_dir($this->getRootDirectory() . '/themes/' . $aConfig['theme'])) {
-            $sThemeDir = 'themes/' . $aConfig['theme'] . '/';
+            $sThemeDir = 'vendor/bower-asset/bootswatch/' . $p_aConfig['theme'] . '/';
+        } elseif (is_dir($this->getRootDirectory() . '/themes/' . $p_aConfig['theme'])) {
+            $sThemeDir = 'themes/' . $p_aConfig['theme'] . '/';
         } else {
-            throw new \Exception('Could not find theme directory "' . $aConfig['theme'] . '"');
+            throw new \Exception('Could not find theme directory "' . $p_aConfig['theme'] . '"');
         }
 
         return $sThemeDir;
@@ -258,7 +264,8 @@ class DirectoryListing
 
                 case 'image':
                    $aInfo['tag'] = sprintf(
-                        '<img src="/Directory_Listing_Theme/thumbnail.php?file=%s" alt="%s" />',
+                        '<img src="/%s/thumbnail.php?file=%s" alt="%s" />',
+                        self::DIRECTORY_NAME,
                         urlencode($aInfo['link']),
                         $aInfo['name']
                     );
@@ -283,18 +290,18 @@ class DirectoryListing
 
     private function loadConfig()
     {
-        $aConfig = array_merge([], $this->aConfig);
+        $aConfig = array_merge([], $this->m_aConfig);
 
-        if (is_file($this->sConfigFile)) {
+        if (is_file($this->m_sConfigFile)) {
 
-            $this->bUseBootstrap = true;
+            $this->m_bUseBootstrap = true;
 
-            if (!is_readable($this->sConfigFile)) {
+            if (!is_readable($this->m_sConfigFile)) {
                 throw new \Exception("Could not read configuration file");
             } else {
                 $aConfig = array_merge(
                     $aConfig,
-                    json_decode(file_get_contents($this->sConfigFile), true)
+                    json_decode(file_get_contents($this->m_sConfigFile), true)
                 );
             }
         }
@@ -307,7 +314,7 @@ class DirectoryListing
         $sReadme = '';
         foreach ($aConfig['readmeExtensions'] as $t_sExtension) {
             $sReadMeFileName = 'readme-footer' . $t_sExtension;
-            $sReadMeFilePath = urldecode($this->aEnvironment['DOCUMENT_ROOT'] . $this->aEnvironment['REQUEST_URI'] . $sReadMeFileName);
+            $sReadMeFilePath = urldecode($this->m_aEnvironment['DOCUMENT_ROOT'] . $this->m_aEnvironment['REQUEST_URI'] . $sReadMeFileName);
 
             $sReadmeHtml = $this->buildReadmeHtml($sReadMeFilePath, $t_sExtension);
 
@@ -371,21 +378,21 @@ class DirectoryListing
     }
 
     /**
-     * @param array $aConfig
+     * @param array $p_aConfig
      *
      * @return array
      */
-    private function buildCssAssets(array $aConfig)
+    private function buildCssAssets(array $p_aConfig)
     {
-        $sThemeDir = $this->fetchThemeDirectory($aConfig);
+        $sThemeDir = $this->fetchThemeDirectory($p_aConfig);
 
         $aAssets = [
             $this->getAssetPath('table.css', $sThemeDir),
             $this->getAssetPath('thumbnails.css', $sThemeDir),
         ];
 
-        if ($this->bUseBootstrap === false
-            || ($this->bUseBootstrap === true && $aConfig['theme'] !== 'default')
+        if ($this->m_bUseBootstrap === false
+            || ($this->m_bUseBootstrap === true && $p_aConfig['theme'] !== 'default')
         ) {
             array_unshift(
                 $aAssets,
@@ -393,11 +400,11 @@ class DirectoryListing
             );
         }
 
-        if ($this->bUseBootstrap === true) {
+        if ($this->m_bUseBootstrap === true) {
             array_unshift(
                 $aAssets,
-                '/Directory_Listing_Theme/vendor/bower-asset/bootstrap/dist/css/bootstrap.min.css',
-                '/Directory_Listing_Theme/vendor/bower-asset/bootstrap/dist/css/bootstrap-theme.min.css'
+                '/' . self::DIRECTORY_NAME . '/vendor/bower-asset/bootstrap/dist/css/bootstrap.min.css',
+                '/' . self::DIRECTORY_NAME . '/vendor/bower-asset/bootstrap/dist/css/bootstrap-theme.min.css'
             );
         }
 
@@ -405,16 +412,16 @@ class DirectoryListing
     }
 
     /**
-     * @param array $aConfig
+     * @param array $p_aConfig
      *
      * @return array
      */
-    private function buildJavascriptAssets($aConfig)
+    private function buildJavascriptAssets($p_aConfig)
     {
-        $sThemeDir = $this->fetchThemeDirectory($aConfig);
+        $sThemeDir = $this->fetchThemeDirectory($p_aConfig);
 
         $aAssets = [
-            '/Directory_Listing_Theme/vendor/bower-asset/jquery/dist/jquery.js',
+            '/' . self::DIRECTORY_NAME . '/vendor/bower-asset/jquery/dist/jquery.js',
             $this->getAssetPath('functions.js', $sThemeDir),
         ];
 
