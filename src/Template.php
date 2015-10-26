@@ -3,7 +3,7 @@ namespace Potherca\Apache\Modules\AutoIndex;
 
 use PHPTAL;
 
-class Template
+class Template implements TemplateInterface
 {
     const DELIMINATOR = '<!-- ┈✂┈┈┈┈┈✄┈┈┈┈┈✄┈┈┈┈┈✄┈┈┈┈┈✄┈┈┈┈┈✄┈┈┈┈┈✂┈┈┈┈┈✄┈┈┈┈┈✂┈┈┈┈┈✄┈┈┈┈┈✂┈┈┈┈┈✄┈ -->';
 
@@ -17,12 +17,10 @@ class Template
         'sIndex' => '',
         'sSignature' => '',
         'sReadmeHtml' => '',
-        'sThumbnailHtml' => '',
+        'aPreviews' => [],
         'sFooterReadme' => '',
-        'aAssets' => [
-            'css' => [''],
-            'js' => [''],
-        ]
+        'aCssAssets' => [],
+        'aJsAssets' => [],
     ];
 
     /** @var PHPTAL */
@@ -33,7 +31,7 @@ class Template
         $this->template = $template;
     }
 
-    final public function buildTop($context)
+    final public function buildTop(array $context)
     {
         if (empty($this->top)) {
             $this->doSplit($context);
@@ -42,7 +40,7 @@ class Template
         return $this->top;
     }
 
-    final public function buildBottom($context)
+    final public function buildBottom(array $context)
     {
         if (empty($this->bottom)) {
             $this->doSplit($context);
@@ -60,6 +58,7 @@ class Template
         $sHtml = $template->execute();
 
         list($this->top, $middle, $this->bottom) = explode(self::DELIMINATOR, $sHtml);
+        unset($middle);
     }
 
     /**
