@@ -1,10 +1,11 @@
 .main-content table {
     table-layout: auto;
-    width: 80%;
+    width: 100%;
 }
 
 .main-content td {
     text-align: left;
+    vertical-align: top;
 }
 
 .main-content td:nth-child(1) { /*icon*/
@@ -25,6 +26,25 @@
 
 .main-content td:nth-child(5) { /*description*/
     opacity: 0.8;
+}
+
+.readme img {
+    max-width: 100%;
+}
+
+/* PREVIEW */
+.main-content .preview {
+    width: 20em;
+    text-align: center;
+}
+
+.preview * {
+    max-width: 100%;
+}
+
+.preview-list,
+.preview .no-preview {
+    display: none;
 }
 
 /*EOF*/
