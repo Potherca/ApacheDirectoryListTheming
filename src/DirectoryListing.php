@@ -299,10 +299,14 @@ class DirectoryListing
             if (!is_readable($this->m_sConfigFile)) {
                 throw new \Exception("Could not read configuration file");
             } else {
-                $aConfig = array_merge(
-                    $aConfig,
-                    json_decode(file_get_contents($this->m_sConfigFile), true)
-                );
+                $sFileContent = file_get_contents($this->m_sConfigFile);
+                $aJsonConfig = json_decode($sFileContent, true);
+                if (is_array($aJsonConfig)) {
+                    $aConfig = array_merge(
+                        $aConfig,
+                        $aJsonConfig
+                    );
+                }
             }
         }
 
