@@ -5,7 +5,6 @@
 [![Version Badge]][Version Page]
 [![Project Stage Badge - Development]][Project Stage Page]
 [![Dependency Badge]][Dependency Page]
-[![Maintained Badge]][Maintained Page]
 [![Scrutinizer Badge]][Scrutinizer Page]
 [![Codacy Badge]][Codacy Page]
 [![Insight Badge]][Insight Page]
@@ -193,8 +192,6 @@ config file for a given directory.
 [Insight Page]: https://insight.sensiolabs.com/projects/a35e80d9-bf21-4afe-a4b2-127a73c5368a
 [License Badge]: https://img.shields.io/badge/License-GPL3%2B-blue.svg
 [License Page]: LICENSE
-[Maintained Badge]: https://stillmaintained.com/potherca/ApacheDirectoryListTheming.svg
-[Maintained Page]: https://stillmaintained.com/potherca/ApacheDirectoryListTheming
 [Project Stage Badge - Development]: http://img.shields.io/badge/Project%20Stage-Development-yellowgreen.svg
 [Project Stage Badge - Production]: http://img.shields.io/badge/Project%20Stage-Production%20Ready-brightgreen.svg
 [Project Stage Page]: http://bl.ocks.org/potherca/raw/a2ae67caa3863a299ba0/
