@@ -127,6 +127,9 @@ function outputThumbnail($p_sFilePath, $p_sThumbDirectory, $p_iImageWidth, $p_sO
  * Standard error (stderr) please visit:
  *      http://en.wikipedia.org/wiki/Standard_streams
  */
+/**
+ * @param string $p_sCommand
+ */
 function executeCommand($p_sCommand, $p_sInput='') {
 
     $rProcess = proc_open(
@@ -178,6 +181,11 @@ function buildExceptionImage(\Exception $ex) {
     imagedestroy($rImage);
 }
 
+/**
+ * @param string $p_sText
+ * @param integer $p_dSize
+ * @param string $p_sRgba
+ */
 function drawText($p_sText, $p_dSize, $p_sRgba, $p_iAngle=0, $p_sFontFile=null) {
     $text  = (string) $p_sText;
     $size  = (float)  $p_dSize;

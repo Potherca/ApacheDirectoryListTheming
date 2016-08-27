@@ -55,7 +55,7 @@ class DirectoryListing
 
     //////////////////////////// SETTERS AND GETTERS \\\\\\\\\\\\\\\\\\\\\\\\\\\
     /**
-     * @return array
+     * @return string
      */
     private function getCurrentRealDirectory()
     {
@@ -131,6 +131,11 @@ class DirectoryListing
     }
 
     ////////////////////////////// UTILITY METHODS \\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+    /**
+     * @param string $p_sFile
+     * @param string $p_sThemeDir
+     */
     private function getAssetPath($p_sFile, $p_sThemeDir)
     {
 
@@ -333,7 +338,7 @@ class DirectoryListing
     /**
      * @param array $aConfig
      *
-     * @return array
+     * @return string
      */
     private function buildHeaderReadme($aConfig)
     {
@@ -357,7 +362,7 @@ class DirectoryListing
     }
 
     /**
-     * @param $sReadMeFilePath
+     * @param string $sReadMeFilePath
      * @param $t_sExtension
      *
      * @return string
@@ -418,7 +423,7 @@ class DirectoryListing
     /**
      * @param array $p_aConfig
      *
-     * @return array
+     * @return string[]
      */
     private function buildJavascriptAssets($p_aConfig)
     {
