@@ -8,6 +8,7 @@
 [![Scrutinizer Badge]][Scrutinizer Page]
 [![Codacy Badge]][Codacy Page]
 [![Insight Badge]][Insight Page]
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2FPotherca%2FApacheDirectoryListTheming.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2FPotherca%2FApacheDirectoryListTheming?ref=badge_shield)
 
 ## Introduction
 
@@ -204,3 +205,7 @@ config file for a given directory.
 
 
 <!-- EOF -->
+
+
+## License
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2FPotherca%2FApacheDirectoryListTheming.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2FPotherca%2FApacheDirectoryListTheming?ref=badge_large)
