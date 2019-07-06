@@ -14,7 +14,7 @@
         "bower-asset/fuelux": "^3.11",
         "bower-asset/bootswatch": "^3.3",
         "intervention/image": "^2.3",
-        "league/commonmark": "^1.0.0",
+        "league/commonmark": "^0.11.0",
         "phptal/phptal": "^1.3"
     },
     "autoload": {
