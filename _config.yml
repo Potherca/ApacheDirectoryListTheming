@@ -1,0 +1,28 @@
+baseurl: /ApacheDirectoryListTheming
+permalink: pretty
+remote_theme: potherca/extend-the-docs@theme
+
+plugins:
+  - github-pages
+
+# Extend the Docs (Fork) settings
+nav:
+  cross_repository:
+    exclude:
+      - potherca.github.io
+      - simplyedit-strata
+  exclude:
+    - "/"
+  favicon_ico : /favicon.ico
+  footer: true
+  include_posts:
+    sort_by_date: true
+  main_title:
+    link: '/'
+    text: Home
+  recurse: true
+
+# Just the Docs (Source) settings
+aux_links:
+  "Potherca on GitHub":
+    - "https://github.com/Potherca"
