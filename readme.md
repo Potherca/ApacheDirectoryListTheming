@@ -2,7 +2,6 @@
 
 [![License Badge]][License Page]
 [![Project Stage Badge - Development]][Project Stage Page]
-[![Dependency Badge]][Dependency Page]
 [![Scrutinizer Badge]][Scrutinizer Page]
 [![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2FPotherca%2FApacheDirectoryListTheming.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2FPotherca%2FApacheDirectoryListTheming?ref=badge_shield)
 
@@ -181,8 +180,6 @@ config file for a given directory.
 [Bootstrap]: https://bootswatch.com/
 [BootSwatch]: http://getbootstrap.com/
 
-[Dependency Badge]: https://www.versioneye.com/user/projects/562c983036d0ab00210012b7/badge.svg
-[Dependency Page]: https://www.versioneye.com/user/projects/562c983036d0ab00210012b7
 [License Badge]: https://img.shields.io/badge/License-GPL3%2B-blue.svg
 [License Page]: LICENSE
 [Project Stage Badge - Development]: http://img.shields.io/badge/Project%20Stage-Development-yellowgreen.svg
