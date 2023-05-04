@@ -1,7 +1,6 @@
 # Apache Directory List Theming
 
 [![License Badge]][License Page]
-[![Version Badge]][Version Page]
 [![Project Stage Badge - Development]][Project Stage Page]
 [![Dependency Badge]][Dependency Page]
 [![Scrutinizer Badge]][Scrutinizer Page]
@@ -191,8 +190,6 @@ config file for a given directory.
 [Project Stage Page]: http://bl.ocks.org/potherca/raw/a2ae67caa3863a299ba0/
 [Scrutinizer Badge]: https://img.shields.io/scrutinizer/g/potherca/ApacheDirectoryListTheming.svg
 [Scrutinizer Page]: https://scrutinizer-ci.com/g/potherca/ApacheDirectoryListTheming/
-[Version Badge]: http://img.shields.io/github/tag/potherca/ApacheDirectoryListTheming.svg
-[Version Page]: https://github.com/potherca/ApacheDirectoryListTheming/releases 
 
 <!-- EOF -->
 
